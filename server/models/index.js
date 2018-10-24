@@ -25,16 +25,17 @@ if(CONFIG.db_host != ''){
 
     mongoose.connect(mongo_location, dbConnectionOptions).catch((err)=>{
         console.log('Can Not Connect to Mongo Server:', mongo_location)
-    })
+    });
+    mongoose.set('useCreateIndex', true); // for deprecation warning
 
     let db = mongoose.connection;
     module.exports = db;
     db.once('open', ()=>{
         console.log('Connected to mongo at '+mongo_location);
-    })
+    });
     db.on('error', (error)=>{
         console.log("error", error);
-    })
+    });
     // End of Mongoose Setup
 }else{
     console.log("No Mongo Credentials Given");

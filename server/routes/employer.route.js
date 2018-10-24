@@ -1,6 +1,8 @@
 const express = require('express');
+const CONFIG = require('../config/config');
 
 const EmployerController = require('../controllers/employer.controller');
+const checkAuth = require('../middleware/check-auth')(CONFIG.auth_type_employer);
 const router = express.Router();
 
 router.route('/')
@@ -11,5 +13,11 @@ router.route('/:id')
 .get(EmployerController.getEmployerById)
 .patch(EmployerController.updateEmployer)
 .delete(EmployerController.deleteEmployer);
+
+router.route('/signup')
+.post(EmployerController.signupEmployer);
+
+router.route('/login')
+.post(EmployerController.loginEmployer);
 
 module.exports = router;

@@ -10,6 +10,7 @@ const {resToErr, resToSuccess} = require('./services/util.service');
 const employerRoutes = require('./routes/employer.route');
 const jobRoutes = require('./routes/job.route');
 const seekerRoutes = require('./routes/seeker.route');
+const indexRoutes = require('./routes/index.route');
 
 // DATABASE
 const models = require("./models");
@@ -37,9 +38,10 @@ app.use((req, res, next) => {
 });
 
 // router middleware
+app.use('/', indexRoutes);
 app.use('/employers', employerRoutes);
 app.use('/jobs', jobRoutes);
-app.use('/seeker', seekerRoutes);
+app.use('/seekers', seekerRoutes);
 
 // handling errors - any route operation that makes it pass the above routes is definitely an error.
 
