@@ -1,0 +1,31 @@
+<div class="popup" id="popup">
+  <div class="popup__content">
+    <a [routerLink]="['/home']" class="close"></a>
+    <div class="popup__form">
+      <form class="form" [formGroup]="signupForm" (ngSubmit)="onSubmit()">
+        <h2 class="heading-secondary u-center-text d-inherit">Signup</h2>
+        <div class="form__group">
+          <label class="form__label heading-secondary">First name</label>
+          <input type="text" class="form__input" id="firstname" formControlName="firstname"  placeholder="Enter first name" required>
+        </div>
+        <div class="form__group">
+          <label class="form__label heading-secondary">Last name</label>
+          <input type="text" class="form__input" id="lastname" formControlName="lastname"  placeholder="Enter last name" required>
+        </div>
+        <div class="form__group">
+          <label class="form__label heading-secondary">Other name(s)</label>
+          <input type="text" class="form__input" id="email" formControlName="othername"  placeholder="Enter other name(s)" required>
+        </div>
+        <div class="form__group">
+          <label class="form__label heading-secondary">Email</label>
+          <input type="email" class="form__input" id="exampleInputEmail1" formControlName="email"  placeholder="Enter email" required>
+        </div>
+        <div class="form__group">
+          <label class="form__label heading-secondary">Password</label>
+          <input type="password" class="form__input" id="exampleInputPassword1" formControlName="password"  placeholder="Password" required>
+        </div>
+        <button type="submit" class="popup_form-button"  [disabled]="signupForm.pristine || signupForm.invalid">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>

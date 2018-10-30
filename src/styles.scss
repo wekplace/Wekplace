@@ -1,14 +1,17 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@import "scss/abstracts/variables";
+@import "scss/abstracts/mixins";
+@import "scss/abstracts/functions";
 
-body {
-  font-family: "Lato", sans-serif;
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 1.7;
-  color: #777;
-  padding: 20px;
-}
+@import "scss/base/base";
+@import "scss/base/animations";
+@import "scss/base/typography";
+@import "scss/base/utilities";
+
+@import "scss/components/button";
+@import "scss/components/form";
+@import "scss/components/popup";
+
+@import "scss/layout/header";
+
+@import "scss/pages/home";
+

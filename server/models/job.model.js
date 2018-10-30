@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 
-const jobSchema = mongoose.Schema({
+const jobSchema = new mongoose.Schema({
     title: {type: String, required: true},
     email: {type: String, required: true, unique: true, sparse: true},
     employer: {type: mongoose.Schema.ObjectId, ref: 'Employer'},

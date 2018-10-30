@@ -11,10 +11,10 @@ export class AuthGuard implements CanActivate {
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.auth.getToken('jobSeeker')) {
+    if (this.auth.getUserFromLocalStorage('jobSeeker')) {
       // then the user is logged in as a jobseeker
       return true;
-    } else if (this.auth.getToken('employer')) {
+    } else if (this.auth.getUserFromLocalStorage('employer')) {
       // then the user is logged in as an employer
       return true;
     }

@@ -22,12 +22,13 @@ export class JobSeekerService {
 
   signupSeeker(email, password, firstName, lastName, otherName) {
     let signupInfo = {
-      email,
-      password,
       firstName,
       lastName,
-      otherName
+      otherName,
+      email,
+      password
     }
+    
     return this.http.post(`${this.uri}/signup`, signupInfo);
   }
 

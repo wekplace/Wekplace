@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { JobSeekerService } from '../job-seeker.service';
 import { AuthenticationService } from '../app-authentication/authentication.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'wkp-home',
@@ -10,7 +11,11 @@ import { AuthenticationService } from '../app-authentication/authentication.serv
 export class HomeComponent implements OnInit {
   jobSeeker = {};
   err;
-  constructor(private jobSeekerService: JobSeekerService, private auth: AuthenticationService) { }
+  searchForm: FormGroup = this.fb.group({
+    search: ['']
+  });
+  
+  constructor(private jobSeekerService: JobSeekerService, private auth: AuthenticationService, private fb: FormBuilder) { }
 
   ngOnInit() {
     this.jobSeekerService.getSeeker("5bcf4e38aa365f26086518fb")
