@@ -8,7 +8,7 @@ const profileSchema = new mongoose.Schema({
     programStudied: [String],
     levelOfEducation: {type: String},
     yearOfCompletion: {type: String},
-    otherAcademicQualifications: {type: String},
+    otherAcademicQualifications: [String],
     careerGoals: [String],
     professionalStrengths: [String],
     professionalWeaknesses: [String],

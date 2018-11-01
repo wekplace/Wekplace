@@ -11,10 +11,10 @@ module.exports.signupUser = async (req, res, next) => {
     }).exec()
         .then(async (user) => {
             if (user) {
-                if (user.email === email) {
+                if (user.email === userInfo.email) {
                     return resToErr(res, { message: 'Email exists' }, 400);
                 }
-                if (user.username === username) {
+                if (user.username === userInfo.username) {
                     return resToErr(res, { message: 'Username exists' }, 400);
                 }
             }
@@ -42,21 +42,27 @@ module.exports.loginUser = async (req, res, next) => {
         if (err) return resToErr(res, err, 500);
 
         if (matchedUser) {
-            let userData; // userData is the data from the corresponding user's account; either seeker, employer or admin
+            let userData, id="none"; // userData is the data from the corresponding user's account; either seeker, employer or admin
+                                     // id is the id of the corresponding user; either id of the seeker, employer or admin
             if (matchedUser.accountType === CONFIG.SEEKER_ACCOUNT) {
                 [err, userData] = await to(Seeker.findOne({userAccount: matchedUser._id}).exec());
-                token = matchedUser.getJWT(credential.userLogin, userData);
             } else if (matchedUser.accountType === CONFIG.EMPLOYER_ACCOUNT) {
                 [err, userData] = await to(Employer.findOne({userAccount: matchedUser._id}).exec());
-                token = matchedUser.getJWT(credential.userLogin, userData);
             } else if (matchedUser.accountType === CONFIG.ADMIN_ACCOUNT) {
                 
+            }
+            if (userData) {
+                token = matchedUser.getJWT(credential.userLogin, userData);
+                id = userData._id
+            } else {
+                token = matchedUser.getJWT(credential.userLogin);
             }
             
             let resData = {
                 message: 'Authorization successful',
                 token: token,
-                id: userData._id
+                id: id,
+                userId: user._id
             }
             return resToSuccess(res, resData, 200);
         }
@@ -81,7 +87,7 @@ module.exports.getUsers = async (req, res, next) => {
 };
 
 module.exports.getUserById = async (req, res, next) => {
-    let err, user, id = req.params.id;
+    let err, user, id = req.params.userId;
     [err, user] = await to(User.findOne({ _id: id }).exec());
 
     if (err) return resToErr(res, err, 500);
@@ -94,14 +100,14 @@ module.exports.getUserById = async (req, res, next) => {
 };
 
 module.exports.updateUser = async (req, res, next) => {
-    let updateOperations = {}, id = req.params.id, err, user;
+    let updateOperations = {}, id = req.params.userId, err, user;
     for (let operation of req.body) {
         updateOperations[operation.propName] = operation.value;
     }
 
     [err, user] = await to(User.findOne({ _id: id }).exec());
     if (err) return resToErr(res, err, 500);
-    
+
     user.set(updateOperations);
     [err, savedUser] = await to(user.save());
     if (err) return resToErr(res, err, 500);
@@ -111,11 +117,11 @@ module.exports.updateUser = async (req, res, next) => {
 };
 
 module.exports.deleteUser = async (req, res, next) => {
-    User.findOne({ _id: req.params.id }).exec()
+    User.findOne({ _id: req.params.userId }).exec()
         .then(async (user) => {
             if (user) {
                 let err, deletedUser;
-                [err, deletedUser] = await to(seeker.remove());
+                [err, deletedUser] = await to(user.remove());
 
                 if (err) return resToErr(res, err, 500);
 

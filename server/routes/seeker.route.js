@@ -2,22 +2,33 @@ const express = require('express');
 const CONFIG = require('../config/config');
 
 const SeekerController = require('../controllers/seeker.controller');
-const checkAuth = require('../middleware/check-auth')(CONFIG.auth_type_seeker);
+const checkAuth = require('../middleware/check-auth');
 const router = express.Router();
 
 router.route('/')
-.get(checkAuth, SeekerController.getSeekers)
-.post(SeekerController.createSeeker); // This is only available to super Admin
+.get(SeekerController.getSeekers);
 
-router.route('/:id')
-.get(SeekerController.getSeekerById)
-.patch(SeekerController.updateSeeker)
-.delete(SeekerController.deleteSeeker);
+router.route('/:userId')
+.post(SeekerController.createSeeker)
+.get(SeekerController.getSeekerByUserId)
+.patch(SeekerController.updateSeekerUserId)
+.delete(SeekerController.deleteSeekerUserId);
 
-router.route('/signup')
-.post(SeekerController.signupSeeker)
+router.route('/:userId/profile')
+.post(SeekerController.createSeekerProfileByUserId)
+.get(SeekerController.getSeekerProfileByUserId);
 
-router.route('/login')
-.post(SeekerController.loginSeeker)
+router.route('/:userId/skills')
+.post(SeekerController.createSeekerSkillsByUserId)
+.get(SeekerController.getSeekerSkillsByUserId);
+
+router.route('/:userId/expectations')
+.post(SeekerController.createSeekerExpectionsByUserId)
+.get(SeekerController.getSeekerExpectationsByUserId);
+
+// router.route('/:id')
+// .get(SeekerController.getSeekerById)
+// .patch(SeekerController.updateSeeker)
+// .delete(SeekerController.deleteSeeker);
 
 module.exports = router;

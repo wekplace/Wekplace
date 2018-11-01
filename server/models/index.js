@@ -17,7 +17,7 @@ if(CONFIG.db_host != ''){
       .forEach((file) => {
         var filename = file.split('.')[0]; // Gets the filename without the extensions
         var model_name = filename.charAt(0).toUpperCase() + filename.slice(1); // Capitalizes the filename
-        models[model_name] = require('./'+file); // requires the file into its appropriate name. eg) model.J = require('job.model.js')
+        models[model_name] = require('./'+file); // requires the file into its appropriate name. eg) model.J = require('job.model')
     });
 
     const mongo_location = 'mongodb://'+CONFIG.db_host+':'+CONFIG.db_port+'/'+CONFIG.db_name;

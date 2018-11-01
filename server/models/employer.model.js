@@ -9,10 +9,7 @@ const CONFIG = require('../config/config');
 const employerSchema = new mongoose.Schema({
     name: {type: String, required: true},
     phone: {type: String, unique: true, sparse: true},
-    userAccount: {type: mongoose.Schema.objectId, ref: 'User'},
-    profile: {
-
-    }
+    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 });
 
 employerSchema.pre('remove', async function(next) {

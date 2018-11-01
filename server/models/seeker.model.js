@@ -11,13 +11,13 @@ const seekerSchema = new mongoose.Schema({
     otherName: {type: String},
     gender: {type: String},
     residentialAddress: {type: String},
-    phone: {type: String, unique: true, sparse:true,
+    phone: {type: String, unique: true,
         validate: [validate({
             validator: 'isNumeric',
             message: 'Invalid contact number'
         })]},
     preferredJobType: {type: String},
-    userAccount: {type: mongoose.Schema.objectId, ref: 'User'},
+    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     profile: profileSchema,
     skills: skillsSchema,
     expectations: expectationsSchema
