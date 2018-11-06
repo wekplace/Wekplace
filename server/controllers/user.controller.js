@@ -17,16 +17,16 @@ module.exports.getUsers = async (req, res, next) => {
 };
 
 module.exports.getUser = async (req, res, next) => {
-    let filter = {_id: req.params.userId};
+    let filter = ({_id: req.params.userId} || null);
     getSingle(req, res, User, filter);
 };
 
 module.exports.updateUser = async (req, res, next) => {
-    let filter = {_id: req.params.userId}, operations = req.body;
+    let filter = ({_id: req.params.userId} || null), operations = req.body;
     updateSingle(req, res, User, filter, operations);
 };
 
 module.exports.deleteUser = async (req, res, next) => {
-    let filter = {_id: req.params.userId};
+    let filter = ({_id: req.params.userId} || null);
     deleteSingle(req, res, User, filter);
 };

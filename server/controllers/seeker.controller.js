@@ -1,11 +1,12 @@
 const { Seeker } = require('../models');
-const { 
-    getMultiple, 
-    getSingle, 
-    updateSingle, 
-    deleteSingle, 
+const {
+    getMultiple,
+    getSingle,
+    updateSingle,
+    deleteSingle,
     setChildSchema,
-    createUser} = require('../services/helper.controller');
+    createUser,
+    applyJob } = require('../services/helper.controller');
 
 module.exports.createSeeker = async (req, res, next) => {
     let userId = req.params.userId, info = req.body;
@@ -17,31 +18,45 @@ module.exports.getSeekers = async (req, res, next) => {
 };
 
 module.exports.getSeeker = async (req, res, next) => {
-    let filter = {userAccount: req.params.userId};
+    let filter = ({ userAccount: req.params.userId } || null);
     getSingle(req, res, Seeker, filter);
 };
 
-module.exports.updateSeekerUserId = async (req, res, next) => {
-    let filter = {userAccount: req.params.userId}, updateOperations = req.body;
+module.exports.updateSeeker = async (req, res, next) => {
+    let filter = ({ userAccount: req.params.userId } || null), updateOperations = req.body;
     updateSingle(req, res, Seeker, filter, updateOperations);
 };
 
-module.exports.deleteSeekerUserId = async (req, res, next) => {
-    let filter = { userAccount: req.params.userId };
+module.exports.deleteSeeker = async (req, res, next) => {
+    let filter = ({ userAccount: req.params.userId } || null);
     deleteSingle(req, res, Seeker, filter);
 };
 
 module.exports.setSeekerProfile = async (req, res, next) => {
-    let filter = { userAccount: req.params.userId }, childSchemaPath = "profile", info = req.body;
+    let filter = ({ userAccount: req.params.userId } || null), childSchemaPath = "profile", info = req.body;
     setChildSchema(req, res, Seeker, filter, info, childSchemaPath);
 }
 
 module.exports.setSeekerSkills = async (req, res, next) => {
-    let filter = { userAccount: req.params.userId }, childSchemaPath = "skills", info = req.body;
+    let filter = ({ userAccount: req.params.userId } || null), childSchemaPath = "skills", info = req.body;
     setChildSchema(req, res, Seeker, filter, info, childSchemaPath);
 }
 
-module.exports.createSeekerExpections = async (req, res, next) => {
-    let filter = { userAccount: req.params.userId }, childSchemaPath = "expectations", info = req.body;
+module.exports.setSeekerExpections = async (req, res, next) => {
+    let filter = ({ userAccount: req.params.userId } || null), childSchemaPath = "expectations", info = req.body;
     setChildSchema(req, res, Seeker, filter, info, childSchemaPath);
+}
+
+module.exports.applyJob = async (req, res, next) => {
+    applyJob(req, res);
+}
+
+module.exports.pushToSeeker = async (req, res, next) => {
+    let filter = ({ userAccount: req.params.userId } || null), pushOperations = req.body;
+    pushToArr(req, res, Seeker, filter, pushOperations);
+}
+
+module.exports.pullFromSeeker = async (req, res, next) => {
+    let filter = ({ userAccount: req.params.userId } || null), pullOperations = req.body;
+    pullFromArr(req, res, Seeker, filter, pullOperations);
 }

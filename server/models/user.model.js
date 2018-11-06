@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: ['registered']
     },
+    referral: {type: String},
     account: { 
         category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'] },
         isAssigned: { type: Boolean, default: false}

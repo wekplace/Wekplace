@@ -1,20 +1,19 @@
 const express = require('express');
-const CONFIG = require('../config/config');
 
 const EmployerController = require('../controllers/employer.controller');
 const router = express.Router();
 
-router.route('/')
-.get(EmployerController.getEmployers)
-.post(EmployerController.setEmployer);
+router.get('/', EmployerController.getEmployers);
+router.post('/:userId/profile',EmployerController.setEmployerProfile);
+router.patch('/:userId/push', EmployerController.pushToEmployer);
+router.patch('/:userId/pull', EmployerController.pullFromEmployer);
 
 router.route('/:userId')
+.post(EmployerController.createEmployer)
 .get(EmployerController.getEmployer)
 .patch(EmployerController.updateEmployer)
 .delete(EmployerController.deleteEmployer);
 
-router.route('/:userId/profile')
-.get(EmployerController.getEmployerProfile)
-.post(EmployerController.setEmployer);
+router.route
 
 module.exports = router;

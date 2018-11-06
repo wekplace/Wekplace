@@ -37,7 +37,7 @@ module.exports.getSingle = async (req, res, Model, filter, select, populateOptio
 };
 
 module.exports.updateSingle = async (req, res, Model, filter, operations) => {
-    let updateOperations = {}, err, doc;
+    let updateOperations = {}, err, doc, queryParams=req.query;
     filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
     for (let operation of operations) {
         updateOperations[operation.propName] = operation.value;
@@ -180,6 +180,7 @@ module.exports.createJob = async (req, res, info, employerId) => {
 module.exports.applyJob = async (req, res, jobId, seekerId) => {
     let seeker, err, job, appliedJob;
     seekerId = req.query.seekerId || seekerId;
+    jobId = req.query.jobId || jobId;
 
     [err, seeker] = await to(Seeker.findOne({_id: seekerId}).exec());
     if (!seeker) return resToErr(res, { message: 'Seeker does not exist' }, 400);
@@ -187,7 +188,7 @@ module.exports.applyJob = async (req, res, jobId, seekerId) => {
 
     [err, job] = await to(Job.findOne({_id: jobId}).exec());
     job.seekers.push(seekerId);
-    let [err, appliedJob] = await to(job.save());
+    [err, appliedJob] = await to(job.save());
     if (err) resToErr(res, err, 500);
 
     let resData = {

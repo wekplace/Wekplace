@@ -25,7 +25,8 @@ module.exports.signupUser = async (req, res, userInfo) => {
 }
 
 module.exports.loginUser = async (req, res, credential) => {
-    let err, user, credential = credential || req.body, token;
+    let err, user;
+    credential = credential || req.body;
     [err, user] = await to(User.findOne({ 
         $or: [{email: credential.userLogin}, {username: credential.userLogin}] })
         .exec());
@@ -39,8 +40,8 @@ module.exports.loginUser = async (req, res, credential) => {
         if (err) return resToErr(res, err, 500);
 
         if (matchedUser) {
-            let userData, id="none"; // userData is the data from the corresponding user's account; either seeker, employer or admin
-                                     // id is the id of the corresponding user; either id of the seeker, employer or admin
+            let userData = {}, token; // userData is the data from the corresponding user's account; either seeker, employer or admin
+
             if (matchedUser.account.category === CONFIG.SEEKER_ACCOUNT) {
                 [err, userData] = await to(Seeker.findOne({userAccount: matchedUser._id}).exec());
             } else if (matchedUser.account.category === CONFIG.EMPLOYER_ACCOUNT) {
@@ -50,7 +51,6 @@ module.exports.loginUser = async (req, res, credential) => {
             }
             if (userData) {
                 token = matchedUser.getJWT(credential.userLogin, userData);
-                id = userData._id
             } else {
                 token = matchedUser.getJWT(credential.userLogin);
             }
@@ -58,8 +58,8 @@ module.exports.loginUser = async (req, res, credential) => {
             let resData = {
                 message: 'Authorization successful',
                 token: token,
-                id: id,
-                userId: user._id
+                user: user,
+                userData: userData
             }
             return resToSuccess(res, resData, 200);
         }
