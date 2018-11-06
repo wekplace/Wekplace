@@ -6,17 +6,15 @@ const router = express.Router();
 
 router.route('/')
 .get(EmployerController.getEmployers)
-.post(EmployerController.createEmployer);
+.post(EmployerController.setEmployer);
 
-router.route('/:id')
-.get(EmployerController.getEmployerById)
+router.route('/:userId')
+.get(EmployerController.getEmployer)
 .patch(EmployerController.updateEmployer)
 .delete(EmployerController.deleteEmployer);
 
-router.route('/signup')
-.post(EmployerController.signupEmployer);
-
-router.route('/login')
-.post(EmployerController.loginEmployer);
+router.route('/:userId/profile')
+.get(EmployerController.getEmployerProfile)
+.post(EmployerController.setEmployer);
 
 module.exports = router;

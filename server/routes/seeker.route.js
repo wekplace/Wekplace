@@ -1,5 +1,4 @@
 const express = require('express');
-const CONFIG = require('../config/config');
 
 const SeekerController = require('../controllers/seeker.controller');
 const checkAuth = require('../middleware/check-auth');
@@ -10,25 +9,17 @@ router.route('/')
 
 router.route('/:userId')
 .post(SeekerController.createSeeker)
-.get(SeekerController.getSeekerByUserId)
+.get(SeekerController.getSeeker)
 .patch(SeekerController.updateSeekerUserId)
 .delete(SeekerController.deleteSeekerUserId);
 
 router.route('/:userId/profile')
-.post(SeekerController.createSeekerProfileByUserId)
-.get(SeekerController.getSeekerProfileByUserId);
+.post(SeekerController.setSeekerProfile)
 
 router.route('/:userId/skills')
-.post(SeekerController.createSeekerSkillsByUserId)
-.get(SeekerController.getSeekerSkillsByUserId);
+.post(SeekerController.setSeekerSkills);
 
 router.route('/:userId/expectations')
-.post(SeekerController.createSeekerExpectionsByUserId)
-.get(SeekerController.getSeekerExpectationsByUserId);
-
-// router.route('/:id')
-// .get(SeekerController.getSeekerById)
-// .patch(SeekerController.updateSeeker)
-// .delete(SeekerController.deleteSeeker);
+.post(SeekerController.setSeekerExpections);
 
 module.exports = router;

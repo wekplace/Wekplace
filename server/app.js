@@ -2,11 +2,11 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
-const mongoose = require('mongoose');
 const pe = require('parse-error');
 
 const {resToErr, resToSuccess} = require('./services/util.service');
 
+const adminRoutes = require('./routes/admin.route')
 const employerRoutes = require('./routes/employer.route');
 const jobRoutes = require('./routes/job.route');
 const seekerRoutes = require('./routes/seeker.route');
@@ -40,10 +40,11 @@ app.use((req, res, next) => {
 
 // router middleware
 app.use('/', indexRoutes);
+app.use('/admins', adminRoutes);
 app.use('/employers', employerRoutes);
 app.use('/jobs', jobRoutes);
 app.use('/seekers', seekerRoutes);
-app.use('/users', usersRoutes)
+app.use('/users', usersRoutes);
 
 // handling errors - any route operation that makes it pass the above routes is definitely an error.
 

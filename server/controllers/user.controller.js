@@ -1,134 +1,32 @@
 const { User } = require('../models');
-const { Seeker } = require('../models');
-const { Employer } = require('../models');
-const { resToErr, resToSuccess, to } = require('../services/util.service');
-const CONFIG = require('../config/config');
+const { getMultiple, getSingle, updateSingle, deleteSingle } = require('../services/helper.controller');
+const { loginUser, signupUser } = require('../services/helper.auth');
 
 module.exports.signupUser = async (req, res, next) => {
     let userInfo = req.body;
-    User.findOne({ 
-        $or: [{email: userInfo.email}, {username: userInfo.username}]
-    }).exec()
-        .then(async (user) => {
-            if (user) {
-                if (user.email === userInfo.email) {
-                    return resToErr(res, { message: 'Email exists' }, 400);
-                }
-                if (user.username === userInfo.username) {
-                    return resToErr(res, { message: 'Username exists' }, 400);
-                }
-            }
-            let err, createdUser; // I am using this createdUser to prevent name conflict
-            [err, createdUser] = await to(User.create(userInfo));
-
-            if (err) return resToErr(res, err, 500);
-
-            return resToSuccess(res, { createdUser: createdUser.toWeb() }, 201);
-        })
+    signupUser(req, res, userInfo);
 }
 
 module.exports.loginUser = async (req, res, next) => {
-    let err, user, credential = req.body, token;
-    [err, user] = await to(User.findOne({ 
-        $or: [{email: credential.userLogin}, {username: credential.userLogin}] })
-        .exec());
-
-    if (err) return resToErr(res, err, 500);
-
-    if (user) {
-        let matchedUser;
-        [err, matchedUser] = await to(user.comparePassword(credential.password));
-
-        if (err) return resToErr(res, err, 500);
-
-        if (matchedUser) {
-            let userData, id="none"; // userData is the data from the corresponding user's account; either seeker, employer or admin
-                                     // id is the id of the corresponding user; either id of the seeker, employer or admin
-            if (matchedUser.accountType === CONFIG.SEEKER_ACCOUNT) {
-                [err, userData] = await to(Seeker.findOne({userAccount: matchedUser._id}).exec());
-            } else if (matchedUser.accountType === CONFIG.EMPLOYER_ACCOUNT) {
-                [err, userData] = await to(Employer.findOne({userAccount: matchedUser._id}).exec());
-            } else if (matchedUser.accountType === CONFIG.ADMIN_ACCOUNT) {
-                
-            }
-            if (userData) {
-                token = matchedUser.getJWT(credential.userLogin, userData);
-                id = userData._id
-            } else {
-                token = matchedUser.getJWT(credential.userLogin);
-            }
-            
-            let resData = {
-                message: 'Authorization successful',
-                token: token,
-                id: id,
-                userId: user._id
-            }
-            return resToSuccess(res, resData, 200);
-        }
-    }
-
-    return resToErr(res, { message: 'Authorization failed' }, 500);
+    let credential = req.body;
+    loginUser(req, res, credential);
 }
 
 module.exports.getUsers = async (req, res, next) => {
-    let err, users;
-    [err, users] = await to(User.find().exec());
-
-    if (err) return resToErr(res, err, 500);
-
-    if (users.length > 0) {
-        let resData = users.map((user) => {
-            return user.toWeb();
-        });
-
-        return resToSuccess(res, { users: resData }, 200);
-    }
+    getMultiple(req, res, User);
 };
 
-module.exports.getUserById = async (req, res, next) => {
-    let err, user, id = req.params.userId;
-    [err, user] = await to(User.findOne({ _id: id }).exec());
-
-    if (err) return resToErr(res, err, 500);
-
-    if (user) {
-        let resData = user.toWeb();
-        return resToSuccess(res, { user: resData }, 200);
-    }
-    return resToErr(res, { message: "User was not found" });
+module.exports.getUser = async (req, res, next) => {
+    let filter = {_id: req.params.userId};
+    getSingle(req, res, User, filter);
 };
 
 module.exports.updateUser = async (req, res, next) => {
-    let updateOperations = {}, id = req.params.userId, err, user;
-    for (let operation of req.body) {
-        updateOperations[operation.propName] = operation.value;
-    }
-
-    [err, user] = await to(User.findOne({ _id: id }).exec());
-    if (err) return resToErr(res, err, 500);
-
-    user.set(updateOperations);
-    [err, savedUser] = await to(user.save());
-    if (err) return resToErr(res, err, 500);
-
-    let resData = { message: 'User was updated', user: savedUser };
-    return resToSuccess(res, resData, 200);
+    let filter = {_id: req.params.userId}, operations = req.body;
+    updateSingle(req, res, User, filter, operations);
 };
 
 module.exports.deleteUser = async (req, res, next) => {
-    User.findOne({ _id: req.params.userId }).exec()
-        .then(async (user) => {
-            if (user) {
-                let err, deletedUser;
-                [err, deletedUser] = await to(user.remove());
-
-                if (err) return resToErr(res, err, 500);
-
-                let resData = { message: 'Seeker was deleted' };
-                if (deletedUser) return resToSuccess(res, resData, 200);
-            }
-
-            return resToErr(res, { message: 'User not found' }, 500);
-        });
+    let filter = {_id: req.params.userId};
+    deleteSingle(req, res, User, filter);
 };

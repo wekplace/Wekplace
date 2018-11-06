@@ -42,7 +42,7 @@ seekerSchema.methods.toWeb = function(){
 };
 
 // using populate on virtual
-seekerSchema.virtual('job', {
+seekerSchema.virtual('jobs', {
     ref: 'Job', // the model to use
     localField: '_id', // where the localField which is the user's (auto generated) _id field
     foreignField: 'seekers.seeker', // is equal to users.user in the corresponding company document

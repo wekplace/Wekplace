@@ -8,13 +8,13 @@ const CONFIG = require('../config/config');
 if(CONFIG.db_host != ''){
     let files = fs
       .readdirSync(__dirname)
-      .filter((file) => {
+      .filter((file, index, arr) => {
       return (file.indexOf('.') !== 0) && (file !== basename) && (file.slice(-3) === '.js');
       // There must be a '.' character in the filename
       // And the file must not be the current file which is index.js
       // The file must end with a '.js'
     })
-      .forEach((file) => {
+      .forEach((file, index, arr) => {
         var filename = file.split('.')[0]; // Gets the filename without the extensions
         var model_name = filename.charAt(0).toUpperCase() + filename.slice(1); // Capitalizes the filename
         models[model_name] = require('./'+file); // requires the file into its appropriate name. eg) model.J = require('job.model')

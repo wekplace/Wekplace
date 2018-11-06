@@ -1,7 +1,5 @@
 const pe = require('parse-error');
 const {to} = require('await-to-js');
-const jwt = require('jsonwebtoken');
-const CONFIG = require('../config/config');
 
 module.exports.to = async (promise) => {
     let err, res;
@@ -41,36 +39,13 @@ module.exports.throwError = function(err_message, log){ // TE stands for Throw E
     throw new Error(err_message);
 };
 
-
-// Theoretical features
-// module.exports.getJWTUtil = function(_id, email, secret, jwtExpTime) {
-//     const getJWT = function () {
-//         const token = jwt.sign({
-//             email: email,
-//             UserId: _id
-//         }, secret, {
-//             expiresIn: jwtExpTime || CONFIG.jwt_expiration
-//         });
-//         console.log(email);
-//         return token;
-//     }
-
-//     return getJWT;
-// };
-
-// module.exports.saveHookUtil = function(context) {
-//     const saveHook =  async function(next){
-//         if (context.isModified('password') || context.isNew) {
-    
-//             let err, salt, hash;
-//             [err, salt] = await to(bcrypt.genSalt(10));
-//             if (err) throwError(err.message, true);
-    
-//             [err, hash] = await to(bcrypt.hash(context.password, salt));
-//             if (err) throwError(err.message, true);
-    
-//             context.password = hash;
-//         }
-//     }
-//     return saveHook;
-// }
+module.exports.getFilterFromQstr = (qStr) => {
+    var arrStr = qStr.split(',');
+    var objArrStr = arrStr.reduce((acc, cur) => {
+        acc[cur.split(':')[0]] = cur.split(':')[1];
+        return acc;
+    }, {});
+    return objArrStr;
+}
+// essentially getFilterFromQstr converts a query string to an object for example
+// "firstName:Isaac,lastName:Tian" => {firstName: "Isaac", lastName: "Tian"}

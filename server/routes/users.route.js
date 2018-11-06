@@ -9,7 +9,7 @@ router.route('/')
 .get(UserController.getUsers);
 
 router.route('/:userId')
-.get(UserController.getUserById)
+.get(UserController.getUser)
 .patch(UserController.updateUser)
 .delete(UserController.deleteUser);
 
@@ -20,7 +20,7 @@ router.route('/signup')
 .post(UserController.signupUser);
 
 // router.route('/:id')
-// .get(SeekerController.getSeekerById)
+// .get(SeekerController.getSeeker)
 // .patch(SeekerController.updateSeeker)
 // .delete(SeekerController.deleteSeeker);
 

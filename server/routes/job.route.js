@@ -8,7 +8,7 @@ const router = express.Router();
 // .post(JobController.createJob);
 
 // router.route('/:id')
-// .get(JobController.getJobById)
+// .get(JobController.getJob)
 // .patch(JobController.updateJob)
 // .delete(JobController.deleteJob);
 
