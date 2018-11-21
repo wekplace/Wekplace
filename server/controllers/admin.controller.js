@@ -16,7 +16,7 @@ module.exports.getAdmins = async (req, res, next) => {
 };
 
 module.exports.getAdmin = async (req, res, next) => {
-    let filter = {_id: req.params.userId};
+    let filter = {userAccount: req.params.userId};
     getSingle(req, res, Admin, filter);
 };
 

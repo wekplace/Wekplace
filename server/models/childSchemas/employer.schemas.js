@@ -10,14 +10,15 @@ const profileSchema = new mongoose.Schema({
 });
 
 const contactPersonSchema = new mongoose.Schema({
-    name: {type: String},
+    firstName: {type: String, required: 'Please enter contact person firstname'},
+    lastName: {type: String, required: 'Please enter contact person last name'},
     position: {type: String},
-    phone: {type: String,
+    phone: {type: String, required: 'Please enter the contact person phone number',
         validate: [validate({
             validator: 'isNumeric',
             message: 'Invalid contact number'
         })]},
-    email: {type: String, required: true, unique: true, sparse: true,
+    email: {type: String, required: 'Please enter the contact person email', unique: true, sparse: true,
         validate: [validate({
             validator: 'isEmail',
             message: 'Invalid email'

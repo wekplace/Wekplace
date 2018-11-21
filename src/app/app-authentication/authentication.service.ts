@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { JobSeekerService } from '../job-seeker.service';
-import { EmployerService } from '../employer.service';
+import { JobSeekerService } from '../api-services/job-seeker.service';
+import { EmployerService } from '../api-services/employer.service';
 import { Router } from '@angular/router';
 
 @Injectable({

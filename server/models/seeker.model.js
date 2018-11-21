@@ -1,13 +1,12 @@
 const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 
-const CONFIG = require('../config/config');
-const { to, throwError} = require('../services/util.service');
+const { to } = require('../services/util.service');
 const { profileSchema, skillsSchema, expectationsSchema} = require('./childSchemas/seeker.schemas');
 
 const seekerSchema = new mongoose.Schema({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
+    firstName: {type: String, required: 'Please enter your first name'},
+    lastName: {type: String, required: 'Please enter your last name'},
     otherName: {type: String},
     gender: {type: String},
     residentialAddress: {type: String},
@@ -17,10 +16,12 @@ const seekerSchema = new mongoose.Schema({
             message: 'Invalid contact number'
         })]},
     preferredJobType: {type: String},
-    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: 'Seeker must have a user account'},
     profile: profileSchema,
     skills: skillsSchema,
     expectations: expectationsSchema
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 
 seekerSchema.pre('remove', async function(next) {
@@ -48,6 +49,5 @@ seekerSchema.virtual('jobs', {
     foreignField: 'seekers.seeker', // is equal to users.user in the corresponding company document
     justOne: false,
 });
-
 
 const Seeker = module.exports = mongoose.model('Seeker', seekerSchema);

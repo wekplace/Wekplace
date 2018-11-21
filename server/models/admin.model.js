@@ -2,15 +2,17 @@ const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 
 const adminSchema = new mongoose.Schema({
-    firstName: { type: String },
-    lastName: { type: String },
+    firstName: { type: String, required: 'Please enter your firstname' },
+    lastName: { type: String, required: 'Please enter your lastname' },
     otherName: { type: String },
-    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: 'Admin must have a user account'},
     phone: {type: String,
         validate: [validate({
             validator: 'isNumeric',
             message: 'Invalid contact number'
         })]}
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 
 adminSchema.pre('remove', async function(next) {

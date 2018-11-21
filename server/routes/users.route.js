@@ -8,6 +8,9 @@ const router = express.Router();
 router.route('/')
 .get(UserController.getUsers);
 
+router.patch('/:userId/push', UserController.pushToUser);
+router.patch('/:userId/pull', UserController.pullFromUser);
+
 router.route('/:userId')
 .get(UserController.getUser)
 .patch(UserController.updateUser)

@@ -1,11 +1,11 @@
 const { getFilterFromQstr, resToErr, resToSuccess, to } = require('./util.service');
-const { Employer, Job, Seeker } = require('../models');
+const { Employer, Job, Seeker, User } = require('../models');
 
 module.exports.getMultiple = async (req, res, Model, filter, select, populateOptions) => {
     let  err, doc, queryParams = req.query;
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
-    select = queryParams.select ? queryParams.select : select;
-    populateOptions = populateOptions || {};
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
+    select = (queryParams.select ? queryParams.select : select) || "";
+    populateOptions = populateOptions || "";
     [err, doc] = await to(Model.find(filter).select(select).populate(populateOptions).exec());
 
     if (err) return resToErr(res, err, 500);
@@ -22,23 +22,22 @@ module.exports.getMultiple = async (req, res, Model, filter, select, populateOpt
 
 module.exports.getSingle = async (req, res, Model, filter, select, populateOptions) => {
     let err, doc, queryParams = req.query;
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
-    select = queryParams.select ? queryParams.select : select;
-    populateOptions = populateOptions || {};
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
+    select = (queryParams.select ? queryParams.select : select) || "";
+    populateOptions = populateOptions || "";
     [err, doc] = await to(Model.findOne(filter).select(select).populate(populateOptions).exec());
 
     if (err) return resToErr(res, err, 500);
 
     if (doc) {
-        let resData = doc.toWeb();
-        return resToSuccess(res, { doc: resData }, 200);
+        return resToSuccess(res, { doc }, 200);
     }
     return resToErr(res, { message: `${Model.modelName} was not found` });
 };
 
 module.exports.updateSingle = async (req, res, Model, filter, operations) => {
     let updateOperations = {}, err, doc, queryParams=req.query;
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
     for (let operation of operations) {
         updateOperations[operation.propName] = operation.value;
     }
@@ -50,87 +49,95 @@ module.exports.updateSingle = async (req, res, Model, filter, operations) => {
     [err, savedDoc] = await to(doc.save());
     if (err) return resToErr(res, err, 500);
 
-    let resData = { message: `${Model.modelName} was updated`, user: savedUser };
+    let resData = { message: `${Model.modelName} was updated`, doc: savedDoc };
     return resToSuccess(res, resData, 200);
 };
 
 module.exports.pushToArr = async (req, res, Model, filter, operations) => {
-    let err, doc;
+    let err, doc, queryParams=req.query;
     
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
     [err, doc] = await to(Model.findOne(filter).exec());
     if (err) resToErr(res, err, 500);
     
-    for (let operation of operations) {
-        doc[operation.pathName].push(operation.value);
+    if (doc) {
+        for (let operation of operations) {
+            if (doc[operation.pathName]) doc[operation.pathName].push(operation.value);
+            else return resToErr(res, {message: "Path does not exist", }, 500);
+        }
+    
+        [err, savedDoc] = await to(doc.save());
+        if (err) return resToErr(res, err, 500);
+    
+        let resData = { 
+            message: `Push operations completed`, 
+            _id: savedDoc._id
+        }
+        return resToSuccess(res, resData, 200);
+    } else {
+        return resToErr(res, {message: `${Model.modelName} does not exist`});
     }
-
-    [err, savedDoc] = await to(doc.save());
-    if (err) return resToErr(res, err, 500);
-
-    let resData = { 
-        message: `Push operations completed`, 
-        _id: savedDoc._id
-    }
-    return resToSuccess(res, resData, 200);
 }
 module.exports.pullFromArr = async (req, res, Model, filter, operations) => {
-    let err, doc;
+    let err, doc, queryParams=req.query;
     
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
     [err, doc] = await to(Model.findOne(filter).exec());
     if (err) resToErr(res, err, 500);
     
-    for (let operation of operations) {
-        doc[operation.pathName].pull(operation.value);
+    if (doc) {
+        for (let operation of operations) {
+            if (doc[operation.pathName]) doc[operation.pathName].pull(operation.value);
+            else return resToErr(res, {message: "Path does not exist", }, 500);
+        }
+    
+        [err, savedDoc] = await to(doc.save());
+        if (err) return resToErr(res, err, 500);
+    
+        let resData = { 
+            message: `Push operations completed`, 
+            _id: savedDoc._id
+        }
+        return resToSuccess(res, resData, 200);
+    } else {
+        return resToErr(res, {message: `${Model.modelName} does not exist`});
     }
-
-    [err, savedDoc] = await to(doc.save());
-    if (err) return resToErr(res, err, 500);
-
-    let resData = { 
-        message: `Push operations completed`, 
-        _id: savedDoc._id
-    }
-    return resToSuccess(res, resData, 200);
 }
 
 module.exports.deleteSingle = async (req, res, Model, filter) => {
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
-    User.findOne(filter).exec()
-        .then(async (doc) => {
-            if (doc) {
-                let err, deletedDoc;
-                [err, deletedDoc] = await to(doc.remove());
+    let queryParams=req.query, user, err;
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
 
-                if (err) return resToErr(res, err, 500);
+    [err, user] = await to(Model.findOne(filter).exec());
+    if(err) resToErr(res, err, 500);
 
-                let resData = { message: `${Model.modelName} was deleted` };
-                if (deletedUser) return resToSuccess(res, resData, 200);
-            }
-
-            return resToErr(res, { message: `${Model.modelName} not found` }, 500);
-        });
+    if (user) {        
+        user.remove();
+        resToSuccess(res, {message:`${Model.modelName} deleted`}, 200);
+    } else {
+        resToErr(res, {message: `${Model.modelName} not found`}, 400);
+    }
 };
 
-module.exports.setChildSchema = (req, res, Model, filter, info, childSchemaPath) => {
-    filter = queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter;
-    Model.findOne(filter).exec()
-        .then(async (doc) => {
-            doc[childSchemaPath].set(info);
-            let [err, savedDoc] = await to(doc.save());
-            if (err) resToErr(res, err, 500);
+module.exports.setChildSchema = async (req, res, Model, filter, info, childSchemaPath) => {
+    let doc, queryParams=req.query;
+    filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
+    [err, doc] = await to(Model.findOne(filter).exec());
+    if (err) resToErr(res, err, 500);
 
-            let resData = {
-                filter: filter,
-                doc: doc._id,
-                child: savedDoc[childSchemaPath],
-                message: "Updated subschema"
-            }
-
-            return resToSuccess(res, resData, 201);
-        })
-        .catch(err => console.error(err));
+    if (doc) {
+        doc[childSchemaPath] = info;
+        let [err, savedDoc] = await to(doc.save());
+        let resData = {
+            model:{ name: Model.modelName, setPath: childSchemaPath},
+            doc: doc._id,
+            child: savedDoc[childSchemaPath],
+            message: "Updated subschema"
+        }
+        return resToSuccess(res, resData, 200);
+    } else {
+        resToErr(res, {message: `${Model.modelName} not found`}, 400);
+    }
 }
 
 module.exports.createUser = (req, res, Model, info, userId) => {
@@ -143,13 +150,14 @@ module.exports.createUser = (req, res, Model, info, userId) => {
                     return resToErr(res, { message: 'Phone number exists' }, 400);
                 }
             }
-            let err, createdUser, user, accountCategory = Model.modelName.toLowerCase;
-            [err, user] = await to(Model.findOne({ _id: userId, 'account.category': accountCategory }));
+            let err, createdUser, user, accountCategory = Model.modelName.toLowerCase();
+            [err, user] = await to(User.findOne({ $and: [{_id: userId}, {'account.category': accountCategory}] }).exec());
             if (!user) return resToErr(res, { message: 'User does not exist' }, 400);
             if (err) return resToErr(res, err, 500);
 
-            if (user && !user.account.isAssigned) {
-                user.account.isAssigned = true;
+            if (user && !user.account.__isAssigned__) {
+                user.account.__isAssigned__ = true;
+                user.save();
                 info.userAccount = info.userAccount || userId; // links users to their account
                 [err, createdUser] = await to(Model.create(info));
                 if (err) return resToErr(res, err, 500);

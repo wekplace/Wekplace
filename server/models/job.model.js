@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const uniqueArrayPlugin = require('mongoose-unique-array');
 
 const jobSchema = new mongoose.Schema({
-    title: { type: String },
-    email: { type: String, required: true, unique: true, sparse: true },
+    title: { type: String, required: 'Please enter the job title' },
+    email: { type: String, required: 'Please enter your email', unique: true, sparse: true },
     employer: { type: mongoose.Schema.Types.ObjectId, ref: 'Employer' },
     seekers: [{ seeker: { type: mongoose.Schema.Types.ObjectId, ref: 'Seeker' } }],
     type: { type: String },
@@ -17,6 +17,8 @@ const jobSchema = new mongoose.Schema({
     description: { type: String },
     requirements: [{type: String, default: []}],
     benefits: [{type: String, default: []}],
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 jobSchema.plugin(uniqueArrayPlugin);
 

@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "nodemon-unit",
             "runtimeExecutable": "nodemon",
-            "program": "${workspaceFolder}/server/models/job.model.js",
+            "program": "${workspaceFolder}/server/models/employer.model.js",
             "restart": true,
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"

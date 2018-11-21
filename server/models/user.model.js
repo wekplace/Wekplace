@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 const jwt = require('jsonwebtoken');
+const uniqueArrayPlugin = require('mongoose-unique-array');
 
 const CONFIG = require('../config/config');
 const Seeker = require('./seeker.model');
@@ -12,7 +13,7 @@ const { to, throwError } = require('../services/util.service');
 
 const userSchema = new mongoose.Schema({
     email: {
-        type: String, required: true, unique: true, sparse: true,
+        type: String, required: 'Please enter your email address', unique: true, sparse: true,
         validate: [validate({
             validator: 'isEmail',
             message: 'Invalid email'
@@ -20,7 +21,7 @@ const userSchema = new mongoose.Schema({
     },
     username: { type: String, unique: true, sparse: true },
     password: {
-        type: String, required: true,
+        type: String, required: 'Please enter your password',
         validate: [validate({
             validator: 'isLength',
             arguments: [5, undefined],
@@ -33,10 +34,13 @@ const userSchema = new mongoose.Schema({
     },
     referral: {type: String},
     account: { 
-        category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'] },
-        isAssigned: { type: Boolean, default: false}
+        category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'], required: 'Please choose an account type' },
+        __isAssigned__: { type: Boolean, default: false}
      }
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
+userSchema.plugin(uniqueArrayPlugin);
 
 userSchema.pre('save', async function (next) {
     if (this.isModified('password') || this.isNew) {
@@ -52,17 +56,17 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.pre('remove', async function (next) {
-    if (this.account.category === 'seeker') {
+    if (this.account.category === 'seeker' && this.account.__isAssigned__) {
         let [err, seeker] = await to(Seeker.findOne({ userAccount: this._id }).exec());
         if (err) throwError(err.message, true);
         seeker.remove();
     }
-    if (this.account.category === 'employer') {
+    if (this.account.category === 'employer' && this.account.__isAssigned__) {
         let [err, employer] = await to(Employer.findOne({ userAccount: this._id }).exec());
         if (err) throwError(err.message, true);
         employer.remove();
     }
-    if (this.account.category === 'admin') {
+    if (this.account.category === 'admin' && this.account.__isAssigned__) {
         let [err, admin] = await to(Admin.findOne({ userAccount: this._id }).exec());
         if (err) throwError(err.message, true);
         admin.remove();

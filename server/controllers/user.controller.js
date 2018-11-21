@@ -1,5 +1,5 @@
 const { User } = require('../models');
-const { getMultiple, getSingle, updateSingle, deleteSingle } = require('../services/helper.controller');
+const { getMultiple, getSingle, updateSingle, deleteSingle, pushToArr, pullFromArr } = require('../services/helper.controller');
 const { loginUser, signupUser } = require('../services/helper.auth');
 
 module.exports.signupUser = async (req, res, next) => {
@@ -30,3 +30,13 @@ module.exports.deleteUser = async (req, res, next) => {
     let filter = ({_id: req.params.userId} || null);
     deleteSingle(req, res, User, filter);
 };
+
+module.exports.pushToUser = async (req, res, next) => {
+    let filter = ({ _id: req.params.userId } || null), pushOperations = req.body;
+    pushToArr(req, res, User, filter, pushOperations);
+}
+
+module.exports.pullFromUser = async (req, res, next) => {
+    let filter = ({ _id: req.params.userId } || null), pullOperations = req.body;
+    pullFromArr(req, res, User, filter, pullOperations);
+}

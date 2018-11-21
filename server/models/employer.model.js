@@ -2,13 +2,11 @@ const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 const uniqueArrayPlugin = require('mongoose-unique-array');
 
-const { to, throwError} = require('../services/util.service');
-const CONFIG = require('../config/config');
 const { profileSchema, contactPersonSchema } = require('./childSchemas/employer.schemas');
 
 const employerSchema = new mongoose.Schema({
-    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    name: {type: String, required: true},
+    userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: 'Employer must have a user account'},
+    name: {type: String, required: 'Please enter the business name'},
     phone: {type: String, unique: true,
         validate: [validate({
             validator: 'isNumeric',
@@ -17,7 +15,7 @@ const employerSchema = new mongoose.Schema({
     tradingName: {type: String},
     location: {type: String},
     website: {type: String},
-    companyEmail: {type: String, required: true, unique: true, sparse: true,
+    orgEmail: {type: String, unique: true, sparse: true,
         validate: [validate({
             validator: 'isEmail',
             message: 'Invalid email'
@@ -27,6 +25,8 @@ const employerSchema = new mongoose.Schema({
     staffSize: {type: String},
     profile: profileSchema,
     contactPersons: [contactPersonSchema]
+}, {
+    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
 employerSchema.plugin(uniqueArrayPlugin);
 
