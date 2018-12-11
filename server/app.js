@@ -46,6 +46,14 @@ app.use('/jobs', jobRoutes);
 app.use('/seekers', seekerRoutes);
 app.use('/users', usersRoutes);
 
+// error handler for express-jwt-permission
+app.use(function (err, req, res, next) {
+  if (err.code === 'permission_denied') {
+    res.status(403).send('Forbidden');
+    resToErr(res, {message: 'Forbidden- Permission Denied'}, 403);
+  }
+});
+
 // handling errors - any route operation that makes it pass the above routes is definitely an error.
 
 app.use((req, res, next) => {

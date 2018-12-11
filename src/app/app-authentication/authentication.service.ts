@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { JobSeekerService } from '../api-services/job-seeker.service';
 import { EmployerService } from '../api-services/employer.service';
 import { Router } from '@angular/router';
+import { UserService } from '../api-services/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,41 +12,23 @@ export class AuthenticationService {
 
   constructor(
     private http: HttpClient, 
-    private jobSeekerService: JobSeekerService, 
-    private employerService: EmployerService,
+    private userService: UserService,
     private router: Router) { }
 
-  loginEmployer(username: String, password: String) {
-    this.employerService.loginEmployer(username, password)
+  login(username: String, password: String) {
+    this.userService.loginUser(username, password)
       .subscribe((res) => {
         if (res) {
-          localStorage.setItem('employer', JSON.stringify(res));
+          localStorage.setItem('user', JSON.stringify(res));
         }
       });
   }
 
-  logoutEmployer() {
-    localStorage.removeItem('jobSeeker');
+  logout() {
+    localStorage.removeItem('user');
   }
 
-  loginSeeker(username: String, password: String) {
-    this.jobSeekerService.loginSeeker(username, password)
-      .subscribe(
-        (res) => {
-        if (res) {
-          localStorage.setItem('jobSeeker', JSON.stringify(res));
-          this.router.navigate(['/home']);
-        }
-      }, (err) => {
-        this.router.navigate(['/home/login']);
-      });
-  }
-
-  logoutSeeker() {
-    localStorage.removeItem('jobSeeker');
-  }
-
-  getUserFromLocalStorage(index: string) {
-    return JSON.parse(localStorage.getItem(index));
+  getUserAuthInfoFromLocalStorage() {
+    return JSON.parse(localStorage.getItem('user'));
   }
 }

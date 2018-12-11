@@ -1,0 +1,64 @@
+<wkp-header></wkp-header>
+<main class="main">
+  <div class="search">
+    <div class="search__heading text-center">
+      <h1 class="heading-primary mb-sm">Find your dream job on Wekplace</h1>
+      <p class="heading-primary__sub">Accra Ghana</p>
+    </div>
+    <div class="search__form">
+      <form [formGroup]="searchForm" class="inline-form">
+        <div class="inline-form__text-group">
+          <input type="text" class="inline-form__input" formControlName="search" placeholder="Enter Job keyword">
+          <label for="search" class="inline-form__label inline-form__label--search">Enter job keyword</label>
+        </div>
+        <div class="inline-form__select-group">
+          <select name="Job type" class="inline-form__select" formControlName="jobType">
+            <option value="">Choose type</option>
+            <option value="full time">Full time</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn--secondary inline-form__submit">Search</button>
+      </form>
+    </div>
+    <div class="search__suggestions">
+      <p class="type-1 text-center">Try one of these</p>
+      <button class="btn-round">Marketing</button>
+      <button class="btn-round">Accounting</button>
+      <button class="btn-round">Mining</button>
+      <button class="btn-round">Big Data</button>
+    </div>
+  </div>
+  <div class="ctas">
+    <h2 class="heading-secondary">
+      Things to do with Wekplace
+    </h2>
+    <div class="ctas__btn-group">
+      <button class="btn btn--neutral btn--icon">
+        <svg class="ctas__icon">
+          <use xlink:href="../../assets/svg/sprites.svg#building" />
+        </svg>
+        Build your employer brand with a career page
+      </button>
+      <button class="btn btn--neutral btn--icon">
+        <svg class="ctas__icon">
+          <use xlink:href="../../assets/svg/sprites.svg#addition-sign" />
+        </svg>
+        Post a job
+      </button>
+      <button class="btn btn--neutral btn--icon">
+        <svg class="ctas__icon">
+          <use xlink:href="../../assets/svg/sprites.svg#curriculum" />
+        </svg>
+        Build a robost CV
+      </button>
+      <button class="btn btn--neutral btn--icon">
+        <svg class="ctas__icon">
+          <use xlink:href="../../assets/svg/sprites.svg#recruitment" />
+        </svg>
+        Browse all jobs
+      </button>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+</main>

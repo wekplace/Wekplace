@@ -1,3 +1,4 @@
+@import "scss/themes/material.theme";
 @import "scss/abstracts/variables";
 @import "scss/abstracts/mixins";
 @import "scss/abstracts/functions";
@@ -7,4 +8,9 @@
 @import "scss/base/typography";
 @import "scss/base/utilities";
 
+@import "scss/components/buttons";
+@import "scss/components/inline-form";
+@import "scss/components/form";
 
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

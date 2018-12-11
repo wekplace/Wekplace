@@ -20,7 +20,7 @@ module.exports.signupUser = async (req, res, userInfo) => {
 
             if (err) return resToErr(res, err, 500);
 
-            return resToSuccess(res, { createdUser: createdUser.toWeb() }, 201);
+            return resToSuccess(res, createdUser, 201);
         })
 }
 
@@ -40,7 +40,7 @@ module.exports.loginUser = async (req, res, credential) => {
         if (err) return resToErr(res, err, 500);
 
         if (matchedUser) {
-            let userData = {}, token; // userData is the data from the corresponding user's account; either seeker, employer or admin
+            let userData = {}, token, resData; // userData is the data from the corresponding user's account; either seeker, employer or admin
 
             if (matchedUser.account.category === CONFIG.SEEKER_ACCOUNT) {
                 [err, userData] = await to(Seeker.findOne({userAccount: matchedUser._id}).exec());
@@ -51,16 +51,21 @@ module.exports.loginUser = async (req, res, credential) => {
             }
             if (userData) {
                 token = matchedUser.getJWT(credential.userLogin, userData);
+                resData = {
+                    message: 'Authorization successful',
+                    token: token,
+                    user: user,
+                    userData: userData
+                }
             } else {
                 token = matchedUser.getJWT(credential.userLogin);
+                resData = {
+                    message: 'Authorization incomplete',
+                    token: token,
+                    user: user
+                }
             }
             
-            let resData = {
-                message: 'Authorization successful',
-                token: token,
-                user: user,
-                userData: userData
-            }
             return resToSuccess(res, resData, 200);
         }
     }

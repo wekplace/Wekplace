@@ -1,0 +1,63 @@
+<wkp-backdrop>
+  <div class="signup-form">
+    <form [formGroup]="signupForm" class="form" (ngSubmit)="onSubmit()">
+      <div class="form__heading">
+        <h2 class="heading-secondary">Sign up at Wekplace</h2>
+      </div>
+      <div class="form__inline-input-group">
+        <div class="form__text-group">
+          <input formControlName="firstName" type="text" placeholder="Firstname" id="firstName" class="form__input">
+          <label for="firstName" class="form__label">First name</label>
+        </div>
+        <div class="form__text-group">
+          <input formControlName="lastName" type="text" placeholder="Lastname" id="lastName" class="form__input">
+          <label for="lastName" class="form__label">Last name</label>
+        </div>
+      </div>
+      <div class="form__text-group">
+        <input formControlName="email" type="email" placeholder="Email" id="email" class="form__input">
+        <label for="email" class="form__label">Email</label>
+      </div>
+      <div class="form__text-group">
+        <input formControlName="file" type="file" placeholder="File" class="form__input" (change)="onFileChanged($event)" accept=".png,.jpg,.jpeg" [ngClass]="{'input-progress': isUploading}">
+        <img *ngIf="downloadUrl | async" [src]="downloadUrl | async" alt="">
+      </div>
+      <div class="form__text-group">
+        <input formControlName="password" type="password" placeholder="Password" id="password" class="form__input">
+        <label for="password" class="form__label">Password</label>
+      </div>
+      <div class="form__inline-input-group mb-3">
+        <div class="form__radio-group">
+          <input formControlName="userType" type="radio" class="form__radio-input" id="seeker" name="userType" value="seeker">
+          <label for="seeker" class="form__radio-label">
+            <span class="form__radio-button"></span>
+            Job seeker
+          </label>
+        </div>
+        <div class="form__radio-group">
+          <input formControlName="userType" type="radio" class="form__radio-input" id="employer" name="userType" value="candidate">
+          <label for="employer" class="form__radio-label">
+            <span class="form__radio-button"></span>
+            Employer
+          </label>
+        </div>
+      </div>
+      <div class="form__checkbox-group">
+        <input type="checkbox" class="form__checkbox" id="terms">
+        <label for="terms" class="form__checkbox-label">
+          <span class="form__check-icon">
+            <svg class="form__checkmark">
+              <use xlink:href="../../assets/svg/sprites.svg#correct-symbol" />
+            </svg>
+          </span>
+          I agree with the terms and conditions of Wekplace
+        </label>
+      </div>
+      <button type="submit" class="btn btn--secondary">Submit</button>
+      <p class="form__text">
+        Already have a Wekplace account? Click <a href="" class="btn-inline btn-inline--secondary">here</a> to sign in.
+      </p>
+      <span (click)="goBack()" class="form__close">&times;</span>
+    </form>
+  </div>
+</wkp-backdrop>

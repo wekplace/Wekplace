@@ -32,6 +32,7 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: ['registered']
     },
+    profileImageUrl: {type: String},
     referral: {type: String},
     account: { 
         category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'], required: 'Please choose an account type' },

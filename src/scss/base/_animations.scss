@@ -1,0 +1,47 @@
+@keyframes moveInBottom {
+    0% {
+        opacity: 0;
+        transform: translateY(10rem);
+    }
+
+    50% {
+        
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+@keyframes moveInTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-10rem);
+    }
+
+    50% {
+        
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0)
+    }
+}
+
+@keyframes active-bb {
+    0% {
+        border-bottom:3px solid rgba(255, 255, 0, 0.205)
+    }
+
+    50% {
+        
+        border-bottom:3px solid var(--color-secondary)
+    }
+
+    100% {
+        
+        border-bottom:3px solid rgba(255, 255, 0, 0.137);
+    }
+}

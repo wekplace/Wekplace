@@ -5,29 +5,29 @@ const profileSchema = new mongoose.Schema({
     aboutYourself: {type: String},
     webAddress: {type: Map, of: String},
     academicInstitution: {type: String},
-    programStudied: [{type:String, unique: true, default: []}],
+    programStudied: [{type:String, default: [], unique: true}],
     levelOfEducation: {type: String},
     yearOfCompletion: {type: Date},
-    otherAcademicQualifications: [{type: String, default: []}],
-    careerGoals: [{type: String, default: []}],
-    professionalStrengths: [{type: String, default: []}],
-    professionalWeaknesses: [{type: String, default: []}],
-    professionalAchievements: [{type: String, default: []}],
-    preferredFieldOfWork: [{type: String, default: []}],
-    uniqueQualities: [{type: String, default: []}],
-    howYouHandleConflict: [{type: String, default: []}]
+    otherAcademicQualifications: [{type: String, default: [], unique: true}],
+    careerGoals: [{type: String, default: [], unique: true}],
+    professionalStrengths: [{type: String, default: [], unique: true}],
+    professionalWeaknesses: [{type: String, default: [], unique: true}],
+    professionalAchievements: [{type: String, default: [], unique: true}],
+    preferredFieldOfWork: [{type: String, default: [], unique: true}],
+    uniqueQualities: [{type: String, default: [], unique: true}],
+    howYouHandleConflict: [{type: String, default: [], unique: true}]
 });
 profileSchema.plugin(uniqueArrayPlugin);
 
 const skillsSchema = new mongoose.Schema({
-    web: [String],
-    computerSoftware: [String],
-    languages: [String],
-    softSkills: [String]
+    web: [{type: String, unique: true}],
+    computerSoftware: [{type: String, unique: true}],
+    languages: [{type: String, unique: true}],
+    softSkills: [{type: String, unique: true}]
 });
 skillsSchema.plugin(uniqueArrayPlugin);
 
-const expectationsSchema = new mongoose.Schema({
+const salaryExpectationsSchema = new mongoose.Schema({
     max: {type: Number},
     min: {type: Number, required:true},
     remarks: {type: String}
@@ -36,5 +36,5 @@ const expectationsSchema = new mongoose.Schema({
 module.exports = {
     profileSchema,
     skillsSchema,
-    expectationsSchema
+    salaryExpectationsSchema
 }

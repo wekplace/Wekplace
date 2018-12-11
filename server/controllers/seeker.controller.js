@@ -47,10 +47,6 @@ module.exports.setSeekerExpections = async (req, res, next) => {
     setChildSchema(req, res, Seeker, filter, info, childSchemaPath);
 }
 
-module.exports.applyJob = async (req, res, next) => {
-    applyJob(req, res);
-}
-
 module.exports.pushToSeeker = async (req, res, next) => {
     let filter = ({ userAccount: req.params.userId } || null), pushOperations = req.body;
     pushToArr(req, res, Seeker, filter, pushOperations);

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose');
 const validate = require('mongoose-validator');
 
-const { to } = require('../services/util.service');
-const { profileSchema, skillsSchema, expectationsSchema} = require('./childSchemas/seeker.schemas');
+const Job = require('./job.model');
+const { to, throwError } = require('../services/util.service');
+const { profileSchema, skillsSchema, salaryExpectationsSchema} = require('./childSchemas/seeker.schemas');
 
 const seekerSchema = new mongoose.Schema({
     firstName: {type: String, required: 'Please enter your first name'},
@@ -19,7 +20,7 @@ const seekerSchema = new mongoose.Schema({
     userAccount: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: 'Seeker must have a user account'},
     profile: profileSchema,
     skills: skillsSchema,
-    expectations: expectationsSchema
+    expectations: salaryExpectationsSchema
 }, {
     timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
 });
@@ -29,16 +30,38 @@ seekerSchema.pre('remove', async function(next) {
 });
 
 // Get all the jobs relating to a seeker
-seekerSchema.methods.Jobs = async function(){
+seekerSchema.methods.getJobs = async function(){
     let err, jobs;
-    [err, jobs] = await to(Job.find({'seekers.seeker':this._id}));
-    if(err) TE('err getting companies');
-    return companies;
+    [err, jobs] = await to(Job.find({seekers: this._id}));
+    if(err) TE('err getting jobs');
+    return jobs;
+}
+
+// Apply for a job
+seekerSchema.methods.applyJob = async function(jobId) {
+    let job, err;
+    
+    [err, job] = await to(Job.findOne({seekers: this._id}).exec()); // check if seeker has already applied for the job
+    if(job) return { job: job, message: "Job already applied"};
+    if (err) throwError(err);
+
+    [err, job] = await to(Job.findOne({_id: jobId}).exec());
+    if (err) throwError(err);
+
+    if (job) {
+        let appliedJob;
+        job.seekers.push(this._id);
+        [err, appliedJob] = await to(job.save());
+        if (err) throwError(err["message"]);
+
+        return appliedJob;
+    }
+
+    throwError("Job not found");
 }
 
 seekerSchema.methods.toWeb = function(){
     let json = this.toJSON();
-    json.id = this._id;//this is for the front end
     return json;
 };
 

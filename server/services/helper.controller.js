@@ -10,13 +10,6 @@ module.exports.getMultiple = async (req, res, Model, filter, select, populateOpt
 
     if (err) return resToErr(res, err, 500);
 
-    if (doc.length > 0 && typeof doc.toWeb == "function") {
-        let resData = doc.map((user) => {
-            return doc.toWeb();
-        });
-
-        return resToSuccess(res, { doc: resData }, 200);
-    }
     return resToSuccess(res, doc, 200);
 };
 
@@ -162,7 +155,7 @@ module.exports.createUser = (req, res, Model, info, userId) => {
                 [err, createdUser] = await to(Model.create(info));
                 if (err) return resToErr(res, err, 500);
 
-                return resToSuccess(res, { createdUser: createdUser.toWeb() }, 201);
+                return resToSuccess(res, createdUser, 201);
             } else {
                 return resToErr(res, {message: `User has already been assigned`}, 400);
             }
@@ -182,34 +175,22 @@ module.exports.createJob = async (req, res, info, employerId) => {
     [err, createdJob] = await to(Job.create(info));
     if (err) return resToErr(res, err, 500);
 
-    return resToSuccess(res, {createdJob: createdJob.toWeb()}, 201);
+    return resToSuccess(res, createdJob, 201);
 }
 
-module.exports.applyJob = async (req, res, jobId, seekerId) => {
-    let seeker, err, job, appliedJob;
+module.exports.applyJob = async (req, res, seekerId) => {
+    let seeker, err, jobId, appliedJob;
     seekerId = req.query.seekerId || seekerId;
-    jobId = req.query.jobId || jobId;
+    jobId = req.query.jobId || req.body.jobId;
 
     [err, seeker] = await to(Seeker.findOne({_id: seekerId}).exec());
     if (!seeker) return resToErr(res, { message: 'Seeker does not exist' }, 400);
     if (err) return resToErr(res, err, 500);
 
-    [err, job] = await to(Job.findOne({_id: jobId}).exec());
-    job.seekers.push(seekerId);
-    [err, appliedJob] = await to(job.save());
+    [err, appliedJob] = await to(seeker.applyJob(jobId));
     if (err) resToErr(res, err, 500);
 
-    let resData = {
-        _id: appliedJob._id,
-        title: appliedJob.title,
-        location: appliedJob.location,
-        description: appliedJob.description,
-        requirements: appliedJob.requirements,
-        benefits: appliedJob.benefits,
-        seekerId: seekerId,
-        message: 'Job applied'
-    };
-    resToSuccess(res, resData, 200);
+    resToSuccess(res, appliedJob, 200);
 }
 
 
