@@ -8,6 +8,7 @@
 .mb-3 { margin-bottom: 3rem !important;}
 .mb-1 { margin-bottom: 1rem !important;}
 .mr-auto {margin-right: auto !important;}
+.ml-auto {margin-left: auto !important;}
 
 .opacity-100 { opacity: 100% !important;}
 .opacity-80 { opacity: 80% !important;}
@@ -22,6 +23,6 @@
 .text-center { text-align: center !important;}
 .transY-1-inverse {transform: translateY(-.6rem) !important;}
 
-.input-progress {
-    animation: active-bb 1s infinite;
+.nav-offset {
+    padding-top: var(--navbar-height);
 }

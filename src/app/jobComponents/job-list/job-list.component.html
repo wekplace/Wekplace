@@ -1,0 +1,34 @@
+<div class="mat-elevation-z8">
+  <table mat-table class="full-width-table" [dataSource]="dataSource" matSort aria-label="Elements">
+    <!-- Id Column -->
+    <ng-container matColumnDef="title">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Job</th>
+      <td (click)="onClickJobItem(row.id)" [ngClass]="{'highlight': selectedRow == row.id}" mat-cell *matCellDef="let row" class="job-info">
+        <div class="company-logo">
+          <img [src]="row.logoUrl" alt="logo">
+        </div>
+        <div class="job-textgroup">
+          <p class="job-title">{{row.title}}</p>
+          <small class="company-name">{{row.employer}}</small>
+        </div>
+        
+      </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <!-- <ng-container matColumnDef="createdAt">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Posted</th>
+      <td mat-cell *matCellDef="let row">{{row.createdAt | date:"MM/yy"}}</td>
+    </ng-container> -->
+
+    <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+
+  <mat-paginator #paginator class="paginator"
+      [length]="dataSource.data.length"
+      [pageIndex]="0"
+      [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 50, 100]">
+  </mat-paginator>
+</div>

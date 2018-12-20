@@ -1,4 +1,68 @@
-<wkp-header></wkp-header>
+<section class="search-section" fxLayoutAlign="center center">
+  <div class="search-box" fxLayout="column">
+    <h1 class="search-box__heading">Find your dream job</h1>
+    <div class="search-box__tab" fxLayoutAlign="center center">
+      <mat-tab-group animationDuration="0ms">
+        <mat-tab label="Jobs">
+          <form [formGroup]="jobsSearchForm" class="search-form" (ngSubmit)="onSubmit(jobsSearchForm)">
+            <mat-form-field appearance="" color="primary" class="search-form__input-field">
+              <input formControlName="search" class="search-form__input" matInput placeholder="Job Title, Keywords, or Company" value="" type="search">
+            </mat-form-field>
+            <mat-form-field appearance="">
+              <mat-select formControlName="location" panelClass="menu-panel" placeholder="Location">
+                <mat-option *ngFor="let location of locations" [value]="location.value">
+                  {{location.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button type="submit" [disabled]="!jobsSearchForm.valid" class="search-form__button">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </mat-tab>
+        <mat-tab label="Companies">
+          <form [formGroup]="companiesSearchForm" class="search-form" (ngSubmit)="onSubmit(companiesSearchForm)">
+            <mat-form-field appearance="" color="primary" class="search-form__input-field">
+              <input class="search-form__input" matInput placeholder="Company name" value="" type="search">
+            </mat-form-field>
+            <mat-form-field appearance="">
+              <mat-select panelClass="menu-panel" placeholder="Location">
+                <mat-option *ngFor="let location of locations" [value]="location.value">
+                  {{location.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button type="submit" [disabled]="!companiesSearchForm.valid" class="search-form__button">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </mat-tab>
+        <mat-tab label="Candidates">
+          <form [formGroup]="candidatesSearchForm" class="search-form" (ngSubmit)="onSubmit(candidatesSearchForm)">
+            <mat-form-field appearance="" color="primary" class="search-form__input-field">
+              <input class="search-form__input" matInput placeholder="Candidate name or username" value="" type="search">
+            </mat-form-field>
+            <mat-form-field appearance="">
+              <mat-select panelClass="menu-panel" placeholder="Location">
+                <mat-option *ngFor="let location of locations" [value]="location.value">
+                  {{location.viewValue}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <button type="submit" [disabled]="!candidatesSearchForm.valid" class="search-form__button">
+              <mat-icon>search</mat-icon>
+            </button>
+          </form>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </div>
+</section>
+
+
+
+
+<!-- 
 <main class="main">
   <div class="search">
     <div class="search__heading text-center">
@@ -61,4 +125,4 @@
     </div>
   </div>
   <router-outlet></router-outlet>
-</main>
+</main> -->

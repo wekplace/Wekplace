@@ -1,0 +1,56 @@
+.card {
+    height: 100%;
+    border-radius: 0;
+    overflow: auto;
+
+    mat-card-title {
+        color: var(--color-primary-900);
+        font-weight: 600;
+    }
+}
+
+.cover-image {
+    height: 30vh;
+    background-size: cover;
+    background-position: center; 
+}
+
+.apply-now {
+    transition: all .2s;
+
+    &:hover, &:focus {
+        background: aliceblue;
+        color: var(--color-primary-900);
+    }
+}
+
+.tab-heading {
+    padding: 1rem 0;
+    color: var(--color-primary-900);
+}
+
+.list-container {
+    display: flex;
+
+    & > * {
+        flex-basis: 50%;
+        
+        &:not(:last-child()) {
+            margin-right: 1rem;
+        }
+    }
+}
+
+.list{
+    list-style-type: none;
+
+    &__item {
+        display: flex;
+        align-items: center;
+    }
+
+    &__icon {
+        margin-right: .5rem;
+        transform: scale(0.8)
+    }
+}

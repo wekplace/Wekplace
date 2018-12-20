@@ -4,26 +4,31 @@ const validate = require('mongoose-validator');
 
 const jobSchema = new mongoose.Schema({
     title: { type: String, required: 'Please enter the job title' },
-    email: { type: String, required: 'Please enter your email', unique: true, sparse: true,
+    email: { type: String, required: 'Please enter your email',
         validate: [validate({
             validator: 'isEmail',
             message: 'Invalid email'
         })]},
     employer: { type: mongoose.Schema.Types.ObjectId, ref: 'Employer', required: true },
     seekers: [ { type: mongoose.Schema.Types.ObjectId, ref: 'Seeker'} ],
-    type: { type: String },
+    type: { type: String, index: true },
     remuneration: {
         remunerationType: String,
         currency: String,
         minVal: Number,
         maxVal: Number
     },
+    coverImageUrl: {type: String},
     location: { type: String },
     description: { type: String },
-    requirements: [{type: String, default: [], unique: true}],
+    aboutPosition: { type: String },
+    responsibilities: {type: [String], default:[], unique: true},
+    skillRequirements: [{type: String, default: [], unique: true}],
+    qualifications: [{type: String, default: [], unique: true}],
     benefits: [{type: String, default: [], unique:true}],
+    tags:  [{type: String, default: [], unique:true}],
 }, {
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}
 });
 jobSchema.plugin(uniqueArrayPlugin);
 

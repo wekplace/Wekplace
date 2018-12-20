@@ -1,0 +1,66 @@
+<mat-card class="card">
+  <mat-card-header fxLayoutAlign="space-between">
+    <mat-card-title-group class="title">
+      <mat-card-title>{{jobDetail.title}}</mat-card-title>
+      <mat-card-subtitle>{{jobDetail.employer.name}}</mat-card-subtitle>
+    </mat-card-title-group>
+    <div>
+      <button class="apply-now" mat-raised-button color="accent">Apply Now</button>
+    </div>
+  </mat-card-header>
+  <div class="cover-image" [ngStyle]="backgroundImage">&nbsp;</div>
+  <mat-card-content>
+    <mat-tab-group>
+      <mat-tab label="Description">
+        <h3 class="tab-heading">Introduction</h3>
+        <p>{{jobDetail.description}}</p>
+
+        <h3 class="tab-heading">About the position</h3>
+        <p>{{jobDetail.aboutPosition}}</p>
+      </mat-tab>
+      <mat-tab label="Requirements">
+        <div class="list-container">
+          <div class="list-group">
+            <h3 class="tab-heading">Qualifications</h3>
+            <ul class="list">
+              <li class="list__item" *ngFor="let qualification of jobDetail.qualifications">
+                <mat-icon class="list__icon">stars</mat-icon>{{qualification}}
+              </li>
+            </ul>
+          </div>
+          <div class="list-group">
+            <h3 class="tab-heading">Skills</h3>
+            <ul class="list">
+              <li class="list__item" *ngFor="let skill of jobDetail.skillRequirements">
+                <mat-icon class="list__icon">stars</mat-icon>{{skill}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Responsibilities">
+        <div class="list-group">
+          <h3 class="tab-heading">The following are your duties</h3>
+          <ul class="list">
+            <li class="list__item" *ngFor="let responsibility of jobDetail.responsibilities">
+              <mat-icon class="list__icon">stars</mat-icon>{{responsibility}}
+            </li>
+          </ul>
+        </div>
+      </mat-tab>
+      <mat-tab label="Company">
+        <h3 class="tab-heading">Some more tab content</h3>
+        <p>...</p>
+      </mat-tab>
+      <mat-tab label="Benefits">
+        <h3 class="tab-heading">Some more tab content</h3>
+        <p>...</p>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-button color="warn">LIKE</button>
+    <button mat-button color="primary">SAVE</button>
+  </mat-card-actions>
+  
+</mat-card>

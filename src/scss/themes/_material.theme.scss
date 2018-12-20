@@ -12,11 +12,15 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
-$Wekplace-primary: mat-palette($mat-blue);
-$Wekplace-accent: mat-palette($mat-orange, A200, A100, A400);
+$var-primary: $mat-blue;
+$var-accent: $mat-lime;
+$var-warn: $mat-pink;
+
+$Wekplace-primary: mat-palette($var-primary);
+$Wekplace-accent: mat-palette($var-accent, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$Wekplace-warn: mat-palette($mat-deep-orange);
+$Wekplace-warn: mat-palette($var-warn);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $Wekplace-theme: mat-light-theme($Wekplace-primary, $Wekplace-accent, $Wekplace-warn);
@@ -25,3 +29,13 @@ $Wekplace-theme: mat-light-theme($Wekplace-primary, $Wekplace-accent, $Wekplace-
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
 @include angular-material-theme($Wekplace-theme);
+
+html, body {
+    font-family: 'Lato', 'Roboto', sans-serif;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    overflow: auto;
+}

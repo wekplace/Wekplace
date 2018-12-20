@@ -1,0 +1,22 @@
+@mixin getColorsFromMap($var-primary, $tag) {
+    $contrast: map-get($var-primary, contrast);
+    @each $name, $value in $var-primary {
+
+        @if type-of($value) == "color" {
+        
+            $t-50: rgba($value, .5);
+            $t-80: rgba($value, .8);
+            --color-#{$tag}-#{$name}: #{$value};
+            --color-t-50-#{$tag}-#{$name}: #{$t-50};
+            --color-t-80-#{$tag}-#{$name}: #{$t-80};
+
+        }
+    }
+    @each $name, $value in $contrast {
+
+        @if type-of($value) == "color" {
+            
+            --color-#{$tag}-contrast-#{$name}: #{$value};
+        }
+    }
+}

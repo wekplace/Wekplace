@@ -1,0 +1,47 @@
+<mat-toolbar color="primary" >
+  <div class="toolbar-inner-container" fxLayout="row" fxLayoutAlign="start center">
+    <div class="logo">
+      <a routerLink="/" class="logo__link">WEKPLACE</a>
+    </div>
+    <ul class="nav" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="0vw">
+      <li class="nav__item" fxLayoutAlign="start center">
+        <a routerLink="/companies" class="nav__link">Companies</a>
+      </li>
+      <li class="nav__item" fxLayoutAlign="start center">
+        <a routerLink="/build-cv" class="nav__link">Build CV</a>
+      </li>
+      <li class="nav__item mr-auto" fxLayoutAlign="start center">
+        <a routerLink="/jobs" class="nav__link">Jobs</a>
+      </li>
+      <li class="nav__item" fxLayoutAlign="start center">
+        <button mat-raised-button color="accent" class="nav__link" [matMenuTriggerFor]="employersMenu" >Employers</button>
+        <mat-menu #employersMenu="matMenu" [class]="'menu-panel'">
+          <button mat-menu-item>Post a Job</button>
+          <button mat-menu-item>Signup</button>
+        </mat-menu>
+      </li>
+      <li class="nav__item" fxLayoutAlign="start center">
+        <a routerLink="/login" class="nav__link">Login</a>
+      </li>
+      <li class="nav__item" fxLayoutAlign="start center">
+        <a [routerLink]="[{outlets: { popup: ['signup'] } }]" class="nav__link">Signup</a>
+      </li>
+      <li class="nav__item" fxLayoutAlign="start center">
+        <a routerLink="/logout" class="nav__link">Logout</a>
+      </li>
+    </ul>
+  </div>
+</mat-toolbar>
+
+<!-- <a routerLink="/" class="logo">
+  <img src="../../assets/img/wekplace-logo-3-300x69.png" alt="Logo" class="logo__photo">
+</a>
+<nav class="nav">
+  <a routerLink="/" class="nav__link nav__item">Search Jobs</a>
+  <a routerLink="/" class="nav__link nav__item mr-auto">Build CV</a>
+  <a [routerLink]="['signup']" class="nav__link nav__item">Sign up</a>
+  <a routerLink="/" class="nav__link nav__item">Sign in</a>
+  <div class="nav__item">
+    <a routerLink="/" class="btn btn--primary">Post Job</a>
+  </div>
+</nav> -->

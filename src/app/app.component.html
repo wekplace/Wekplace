@@ -1,1 +1,12 @@
-<router-outlet></router-outlet>
+<mat-sidenav-container>
+  <mat-sidenav [mode]="materialSidebarMode">
+      
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <wkp-header></wkp-header>
+    <main>
+        <router-outlet></router-outlet>
+        <router-outlet name="popup"></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

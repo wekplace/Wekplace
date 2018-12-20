@@ -1,0 +1,51 @@
+.full-width-table {
+  width: 100%;
+}
+
+.job-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all .2s;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  &:hover {
+    background-color: var(--color-primary-50)
+  }
+
+  .company-logo {
+    display: flex;
+    flex-direction: column;
+    width: 22%;
+    overflow: hidden;
+
+    img {
+      width: 5rem; 
+      height: 5rem;
+      border-radius: 50%;
+    }
+  }
+
+  .company-name {
+    color: var(--color-primary-300);
+    font-style: italic;
+  }
+
+  .job-textgroup {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .job-title {
+    color: var(--color-primary-900);
+  }
+}
+
+.highlight {
+  background: var(--color-accent-100);
+}
+
+.paginator {
+  // display: none;
+}

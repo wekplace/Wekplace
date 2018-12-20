@@ -15,6 +15,7 @@ const employerSchema = new mongoose.Schema({
             validator: 'isNumeric',
             message: 'Invalid contact number'
         })]},
+    profileImageUrl: {type: String},
     tradingName: {type: String},
     location: {type: String},
     website: {type: String},
@@ -25,11 +26,11 @@ const employerSchema = new mongoose.Schema({
         })]
     },
     yearEstablished: {type: Date},
-    staffSize: {type: String},
+    staffSize: {type: Number},
     profile: profileSchema,
     contactPersons: [{type: contactPersonSchema, unique: true}]
 }, {
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}
 });
 employerSchema.plugin(uniqueArrayPlugin);
 

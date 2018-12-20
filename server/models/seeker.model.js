@@ -9,6 +9,7 @@ const seekerSchema = new mongoose.Schema({
     firstName: {type: String, required: 'Please enter your first name'},
     lastName: {type: String, required: 'Please enter your last name'},
     otherName: {type: String},
+    profileImageUrl: {type: String},
     gender: {type: String},
     residentialAddress: {type: String},
     phone: {type: String, unique: true,
@@ -22,7 +23,7 @@ const seekerSchema = new mongoose.Schema({
     skills: skillsSchema,
     expectations: salaryExpectationsSchema
 }, {
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}
 });
 
 seekerSchema.pre('remove', async function(next) {

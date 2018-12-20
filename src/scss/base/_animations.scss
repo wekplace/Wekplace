@@ -29,19 +29,3 @@
         transform: translateY(0)
     }
 }
-
-@keyframes active-bb {
-    0% {
-        border-bottom:3px solid rgba(255, 255, 0, 0.205)
-    }
-
-    50% {
-        
-        border-bottom:3px solid var(--color-secondary)
-    }
-
-    100% {
-        
-        border-bottom:3px solid rgba(255, 255, 0, 0.137);
-    }
-}

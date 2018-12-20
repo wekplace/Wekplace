@@ -40,6 +40,7 @@ module.exports.throwError = function(err_message, log){ // TE stands for Throw E
 };
 
 module.exports.getFilterFromQstr = (qStr) => {
+    console.log(qStr);
     var arrStr = qStr.split(',');
     var objArrStr = arrStr.reduce((acc, cur) => {
         acc[cur.split(':')[0]] = cur.split(':')[1];

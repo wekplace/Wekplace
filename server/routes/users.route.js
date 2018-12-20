@@ -8,6 +8,8 @@ const router = express.Router();
 router.route('/')
 .get(UserController.getUsers);
 
+router.get('/isunique', UserController.isUniqueFieldValue);
+
 router.patch('/:userId/push', UserController.pushToUser);
 router.patch('/:userId/pull', UserController.pullFromUser);
 
@@ -21,6 +23,7 @@ router.route('/login')
 
 router.route('/signup')
 .post(UserController.signupUser);
+
 
 // router.route('/:id')
 // .get(SeekerController.getSeeker)

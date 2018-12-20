@@ -1,11 +1,59 @@
 const { getFilterFromQstr, resToErr, resToSuccess, to } = require('./util.service');
 const { Employer, Job, Seeker, User } = require('../models');
 
+module.exports.isUniqueFieldValue = async (req, res, Model) => {
+    let field = req.query.field;
+    let fieldValue = req.query.fieldValue;
+    let filter = {};
+    filter[field] = fieldValue;
+    Model.findOne(filter).exec()
+        .then(user => {
+            if (!user) {
+                resToSuccess(res, { isUnique: true }, 200 );
+            } else {
+                resToSuccess(res, { isUnique: false }, 200 );
+            }
+        })
+        .catch(err => resToErr(res, err, 500));
+}
+
+module.exports.search = async (req, res, Model, select, populateOptions) => {
+    let err, doc;
+    let location = req.query.location;
+    let searchTerm = req.query.search.trim();
+    let filter = {
+        $or: [{
+            title: {
+                $regex: new RegExp(searchTerm, "i")
+            }}, {
+                tags: {
+                    $elemMatch: {$regex: new RegExp(searchTerm, "i")}
+                }
+            }
+        ]
+    };
+    select = select || req.query.select || "";
+
+    if (location) {
+        [err, doc] = await to(Model.find(filter).select(select).populate(populateOptions).exec());
+    } else {
+        [err, doc] = await to(Model.find(filter).select(select).populate(populateOptions).exec());
+    }
+
+    if (err) return resToErr(res, err, 500);
+
+    return resToSuccess(res, doc, 200);
+}
+
 module.exports.getMultiple = async (req, res, Model, filter, select, populateOptions) => {
     let  err, doc, queryParams = req.query;
     filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
     select = (queryParams.select ? queryParams.select : select) || "";
-    populateOptions = populateOptions || "";
+    let customPopulate ="";
+    if(req.query.populatePath &&  req.query.populateSelect) {
+        customPopulate = {path: req.query.populatePath, select: req.query.populateSelect}
+    }
+    populateOptions = populateOptions || req.query.populate || customPopulate;
     [err, doc] = await to(Model.find(filter).select(select).populate(populateOptions).exec());
 
     if (err) return resToErr(res, err, 500);
@@ -17,13 +65,13 @@ module.exports.getSingle = async (req, res, Model, filter, select, populateOptio
     let err, doc, queryParams = req.query;
     filter = (queryParams.filter ? getFilterFromQstr(queryParams.filter) : filter) || {};
     select = (queryParams.select ? queryParams.select : select) || "";
-    populateOptions = populateOptions || "";
+    populateOptions = populateOptions || req.query.populate || req.query.populatePath || "";
     [err, doc] = await to(Model.findOne(filter).select(select).populate(populateOptions).exec());
 
     if (err) return resToErr(res, err, 500);
 
     if (doc) {
-        return resToSuccess(res, { doc }, 200);
+        return resToSuccess(res, doc , 200);
     }
     return resToErr(res, { message: `${Model.modelName} was not found` });
 };
@@ -165,13 +213,12 @@ module.exports.createUser = (req, res, Model, info, userId) => {
 
 module.exports.createJob = async (req, res, info, employerId) => {
     let employer, err, createdJob
-    employerId = req.query.employerId || employerId;
+    employerId = info.employer;
 
     [err, employer] = await to(Employer.findOne({_id: employerId}).exec());
     if (!employer) return resToErr(res, { message: 'Employer does not exist' }, 400);
     if (err) return resToErr(res, err, 500);
 
-    info.employer = info.employer || employerId;
     [err, createdJob] = await to(Job.create(info));
     if (err) return resToErr(res, err, 500);
 

@@ -13,7 +13,7 @@ const { to, throwError } = require('../services/util.service');
 
 const userSchema = new mongoose.Schema({
     email: {
-        type: String, required: 'Please enter your email address', unique: true, sparse: true,
+        type: String, required: 'Please enter your email address', unique: true, sparse: true, lowercase: true,
         validate: [validate({
             validator: 'isEmail',
             message: 'Invalid email'
@@ -32,14 +32,13 @@ const userSchema = new mongoose.Schema({
         type: [String],
         default: ['registered']
     },
-    profileImageUrl: {type: String},
     referral: {type: String},
     account: { 
         category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'], required: 'Please choose an account type' },
         __isAssigned__: { type: Boolean, default: false}
      }
 }, {
-    timestamps: {createdAt: 'created_at', updatedAt: 'updated_at'}
+    timestamps: {createdAt: 'createdAt', updatedAt: 'updatedAt'}
 });
 userSchema.plugin(uniqueArrayPlugin);
 

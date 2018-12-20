@@ -1,5 +1,18 @@
-:host  {
-    display: flex;
-    flex-direction: column;
-    margin: 0 auto;
+mat-sidenav-container, mat-sidenav-content, mat-sidenav {
+  height: 100%;
+}
+  
+mat-sidenav {
+  width: 250px;
+}
+
+wkp-header {
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // right: 0;
+}
+
+.nav-offset {
+  padding-top: var(--navbar-height);
 }
