@@ -1,5 +1,6 @@
 const { resToErr, resToSuccess, to } = require('./util.service');
 const { User, Seeker, Employer, Admin } = require('../models');
+const CONFIG = require('../config/config');
 
 module.exports.signupUser = async (req, res, userInfo) => {
     userInfo = userInfo || req.body;
@@ -20,7 +21,14 @@ module.exports.signupUser = async (req, res, userInfo) => {
 
             if (err) return resToErr(res, err, 500);
 
-            return resToSuccess(res, createdUser, 201);
+            let token = createdUser.getJWT();
+            resData = {
+                message: 'Authorization successful',
+                token: token,
+                expiresIn: CONFIG.jwt_expiration,
+                user: createdUser
+            }
+            return resToSuccess(res, resData, 201);
         })
 }
 
@@ -50,18 +58,20 @@ module.exports.loginUser = async (req, res, credential) => {
                 [err, userData] = await to(Admin.findOne({userAccount: matchedUser._id}).exec());
             }
             if (userData) {
-                token = matchedUser.getJWT(credential.userLogin, userData);
+                token = matchedUser.getJWT();
                 resData = {
                     message: 'Authorization successful',
                     token: token,
+                    expiresIn: CONFIG.jwt_expiration,
                     user: user,
                     userData: userData
                 }
             } else {
-                token = matchedUser.getJWT(credential.userLogin);
+                token = matchedUser.getJWT();
                 resData = {
                     message: 'Authorization incomplete',
                     token: token,
+                    expiresIn: CONFIG.jwt_expiration,
                     user: user
                 }
             }

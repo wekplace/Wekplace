@@ -1,1 +1,25 @@
-<h1 class="nav-offset">Hello</h1>
+<wkp-modal>
+  <form class="form" #f="ngForm" (ngSubmit)="onSubmit(f)">
+    <div class="go-back">
+      <div class="icon-group" (click)="goBack()">
+        <mat-icon>close</mat-icon>
+      </div>
+    </div>
+    <h2 class="form__heading">Login</h2>
+    <div class="form__controls">
+      <mat-form-field appearance="outline">
+        <mat-label>Enter username or email</mat-label>
+        <input matInput ngModel #usernameInput="ngModel" name="userLogin" placeholder="Username or Email" type="text" required>
+        <mat-error *ngIf="usernameInput.hasError('required')">Field must not be empty</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Enter Password</mat-label>
+        <input type="password" matInput placeholder="Your password" ngModel name="password" required minlength="6"
+          #pwInput="ngModel">
+        <mat-hint align="end">{{ pwInput.value?.length }} / 6</mat-hint>
+        <mat-error *ngIf="pwInput.hasError('minlength')">Has to be at least 6 characters long</mat-error>
+      </mat-form-field>
+    </div>
+    <button mat-raised-button color="primary" type="submit" [disabled]="f.invalid">Submit</button>
+  </form>
+</wkp-modal>

@@ -8,17 +8,13 @@ import { PageNotFoundComponent } from '../page-not-found/page-not-found.componen
 import { JobListResolver } from '../jobComponents/job-list.resolver';
 import { JobDetailComponent } from '../jobComponents/job-detail/job-detail.component';
 import { JobResolver } from '../jobComponents/job.resolver';
+import { WelcomeComponent } from '../employer/welcome/welcome.component';
 
 const appRoutes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
-    children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' }
-    ]
   },
-  { path: 'signup', component: SignupComponent },
-  { path: 'login', component: LoginComponent },
   {
     path: 'jobs',
     component: JobsComponent,
@@ -33,6 +29,7 @@ const appRoutes: Routes = [
     resolve: { jobList: JobListResolver }
   },
   { path: 'signup', component: SignupComponent, outlet: 'popup'},
+  { path: 'login', component: LoginComponent, outlet: 'popup'},
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: '**', component: PageNotFoundComponent }
 ];

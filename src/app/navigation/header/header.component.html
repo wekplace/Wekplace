@@ -21,7 +21,7 @@
         </mat-menu>
       </li>
       <li class="nav__item" fxLayoutAlign="start center">
-        <a routerLink="/login" class="nav__link">Login</a>
+        <a [routerLink]="[{outlets: { popup: ['login'] } }]" class="nav__link">Login</a>
       </li>
       <li class="nav__item" fxLayoutAlign="start center">
         <a [routerLink]="[{outlets: { popup: ['signup'] } }]" class="nav__link">Signup</a>

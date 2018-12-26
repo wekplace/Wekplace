@@ -26,6 +26,7 @@ import { JobService } from './jobComponents/job.service';
 import { ModalComponent } from './modal/modal.component';
 import { EqualFieldsValidatorDirective } from './shared/equal-fields-validator.directive';
 import { UniqueFieldsValidatorDirective } from './shared/unique-field-validator.directive';
+import { WelcomeComponent } from './employer/welcome/welcome.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { UniqueFieldsValidatorDirective } from './shared/unique-field-validator.
     PageNotFoundComponent,
     ModalComponent,
     EqualFieldsValidatorDirective,
-    UniqueFieldsValidatorDirective
+    UniqueFieldsValidatorDirective,
+    WelcomeComponent
   ],
   imports: [
     BrowserModule,

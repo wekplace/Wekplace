@@ -29,12 +29,11 @@ const userSchema = new mongoose.Schema({
         })]
     },
     permissions: {
-        type: [String],
-        default: ['registered']
+        type: [String]
     },
     referral: {type: String},
     account: { 
-        category: { type: String, enum: ['seeker', 'employer', 'admin', 'Seeker', 'Employer', 'Admin'], required: 'Please choose an account type' },
+        category: { type: String, enum: ['seeker', 'employer', 'admin'], required: 'Please choose an account type' },
         __isAssigned__: { type: Boolean, default: false}
      }
 }, {
@@ -52,6 +51,15 @@ userSchema.pre('save', async function (next) {
         [err, hash] = await to(bcrypt.hash(this.password, salt));
         if (err) throwError(err.message, true);
         this.password = hash;
+    }
+
+    
+    if (this.account.category === 'seeker' & this.isNew) {
+        this.permissions = ['seeker'];
+    } else if (this.account.category === 'employer' & this.isNew ) {
+        this.permissions = ['employer'];
+    } else if (this.account.category === 'admin' & this.isNew) {
+        this.permissions = ['admin'];
     }
 });
 
@@ -92,19 +100,10 @@ userSchema.methods.toWeb = function () {
     return json;
 };
 
-userSchema.methods.getJWT = function (userLogin, userData) {
-    // userLogin could be either email or username
-    let permissions;
-    if (userData) {
-        permissions = userData.permissions;
-    }
-    else {
-        permissions = "none";
-    }
+userSchema.methods.getJWT = function (userData) {
     const token = jwt.sign({
-        userLogin: userLogin,
         id: this._id,
-        permissions: permissions
+        permissions: this.permissions
     }, CONFIG.jwt_key, {
             expiresIn: CONFIG.jwt_expiration
         });

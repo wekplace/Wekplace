@@ -1,0 +1,42 @@
+.form {
+    background-color: white;
+    font-size: 1.5rem;
+    width: 34.7rem;
+    padding: 2rem 2rem 5rem;
+    text-align: center;
+
+    &__heading {
+        color: var(--color-primary-900);
+        margin-bottom: 3rem;
+    }
+
+    &__controls {
+        display: flex;
+        flex-direction: column;
+    }
+
+    mat-form-field.mat-form-field {
+        border-radius: 0;
+    }
+}
+
+.go-back {
+    display: flex;
+    justify-content: flex-end;
+
+    .icon-group {
+        display: flex;
+        border-radius: 2px;
+        align-items: center;
+        background: var(--color-primary-50);
+        cursor: pointer;
+        color: var(--color-primary-900);
+        transition: all .3s;
+
+        &:hover {
+            background: var(--color-warn-50);
+            color: var(--color-warn-900);
+        }
+    }
+
+}

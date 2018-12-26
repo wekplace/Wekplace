@@ -22,7 +22,9 @@ export class SignupComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['../'], {relativeTo: this.route});
+    // Providing a `null` value to the named outlet
+    // clears the contents of the named outlet
+    this.router.navigate([{ outlets: { popup: null }}]);
   }
 
   onSubmit(form: NgForm) {

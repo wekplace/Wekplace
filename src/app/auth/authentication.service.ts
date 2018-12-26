@@ -4,8 +4,9 @@ import { JobSeekerService } from '../api-services/job-seeker.service';
 import { EmployerService } from '../api-services/employer.service';
 import { Router } from '@angular/router';
 import { environment } from '../../environments/environment';
-import { SignUpData, Filter } from './auth.model';
-import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+import { SignUpData, Filter, LoginData } from './auth.model';
+import { debounceTime, distinctUntilChanged, switchMap, map, tap } from 'rxjs/operators';
+import * as moment from "moment";
 import { Subject } from 'rxjs';
 
 @Injectable({
@@ -14,20 +15,17 @@ import { Subject } from 'rxjs';
 export class AuthenticationService {
 
   uri: string = `http://${environment.domain}:${environment.port}/users`;
+  authChange = new Subject<boolean>();
 
   constructor(
-    private http: HttpClient, 
+    private http: HttpClient,
     private router: Router) { }
-  
-  signUp(data: SignUpData) {
-    return this.http.post(`${this.uri}/signup`, data);
-  }
 
   checkFieldUnique(searchTerm$: Subject<object>) {
     let field: string;
     return searchTerm$.pipe(
-      map((value:Filter) => {
-        field = value.field;  
+      map((value: Filter) => {
+        field = value.field;
         return value.fieldValue;
       }),
       debounceTime(1000),
@@ -37,25 +35,51 @@ export class AuthenticationService {
     );
   }
 
+  private setSession(authData) {
+    let expiresIn = authData.expiresIn.split('')[0];
+    const expiresAt = moment().add(+expiresIn, 'hour');
+    console.log('expires at:', expiresAt);
+
+    localStorage.setItem('token', authData.token);
+    localStorage.setItem('expiresAt', JSON.stringify(expiresAt.valueOf()));
+  }
+
   private isTermUnique(field: string, term: string) {
     const options = {
       params: new HttpParams()
-                .set('field', field)
-                .set('fieldValue', term)
+        .set('field', field)
+        .set('fieldValue', term)
     }
     return this.http.get(`${this.uri}/isunique`, options);
   }
 
-  login(username: string, password: string) {
-    let credential = {userLogin: username, password};
-    return this.http.post(`${this.uri}/login`, credential);
+  private authSuccessfully(authData) {
+    this.setSession(authData);
+    this.authChange.next(true);
+  }
+
+  signUp(data: SignUpData) {
+    return this.http.post(`${this.uri}/signup`, data)
+      .pipe(
+        tap(authData => {
+          this.authSuccessfully(authData);
+        }),
+        map(authData => authData['user'])
+      );
+  }
+
+  login(credential: LoginData) {
+    return this.http.post(`${this.uri}/login`, credential)
+      .pipe(
+        tap(authData => {
+          this.authSuccessfully(authData);
+        })
+      );
   }
 
   logout() {
-    
-  }
-
-  getUserAuthInfoFromLocalStorage() {
-    return JSON.parse(localStorage.getItem('user'));
+    localStorage.removeItem('token');
+    localStorage.removeItem('expiresAt');
+    this.authChange.next(false);
   }
 }
